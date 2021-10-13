@@ -2,6 +2,7 @@
 function love.load()
 	GAME_STATES = {
 		menu = require 'states/menu',
+		gameover = require 'states/gameover',
 	}
 
 	screenWidth, screenHeight = love.graphics.getDimensions()
@@ -14,12 +15,12 @@ end
 function love.update(dt)
 	screenWidth, screenHeight = love.graphics.getDimensions()
 
-	local newState = gameState:update(dt)
+	local newState, data = gameState:update(dt)
 	if newState then
 		print('[GameState] Switching to: ' .. newState)
 		if GAME_STATES[newState] then
 			gameState = GAME_STATES[newState]
-			gameState:init()
+			gameState:init(data)
 		else
 			print('[GameState] ERROR: No such state: ' .. newState)
 		end
