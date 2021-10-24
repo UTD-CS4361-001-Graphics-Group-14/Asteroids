@@ -2,7 +2,8 @@
 function love.load()
 	GAME_STATES = {
 		menu = require 'states/menu',
-		gameover = require 'states/gameover',
+		game = require 'states/game',
+		game_over = require 'states/game_over',
 	}
 
 	screenWidth, screenHeight = love.graphics.getDimensions()
@@ -15,8 +16,13 @@ end
 function love.update(dt)
 	screenWidth, screenHeight = love.graphics.getDimensions()
 
-	local newState, data = gameState:update(dt)
-	if newState then
+	gameState:update(dt)
+	if gameState.newState then
+		local newState = gameState.newState
+		local data = gameState.newStateData
+		gameState.newState = nil
+		gameState.newStateData = nil
+
 		print('[GameState] Switching to: ' .. newState)
 		if GAME_STATES[newState] then
 			gameState = GAME_STATES[newState]
