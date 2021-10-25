@@ -24,6 +24,12 @@ end
 
 function Asteroid:update(dt)
 	self.pos:add(self.vel:product(dt))
+	if self.pos.x > love.graphics.getWidth() then
+		self.pos.x = self.pos.x - love.graphics.getWidth()
+	end
+	if self.pos.y > love.graphics.getHeight() then
+		self.pos.y = self.pos.y - love.graphics.getHeight()
+	end
 end
 
 return Asteroid
