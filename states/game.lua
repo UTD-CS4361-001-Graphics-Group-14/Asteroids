@@ -1,7 +1,7 @@
 local state = {}
 
 local Asteroid = require 'entities/asteroid'
-local Vector2 = require 'util/vector2'
+local Vector2 = require 'lib/vector2'
 
 state.name = 'game'
 
