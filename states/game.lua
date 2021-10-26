@@ -3,6 +3,8 @@ local state = {}
 local Asteroid = require 'entities/asteroid'
 local Vector2 = require 'lib/vector2'
 local utils = require 'lib/utils'
+local score = require 'entities/score'
+local lives = require 'entities/life_counter'
 
 state.name = 'game'
 
@@ -24,6 +26,8 @@ function state:init(data)
 	self.asteroids = {
 		spawnRandomAsteroid()
 	}
+	setScore(0)
+	setLives(3)
 end
 
 function state:keypressed(key)
@@ -32,6 +36,14 @@ function state:keypressed(key)
 		self.newStateData = { score = 200 }
 	elseif key == 's' then
 		self.asteroids[#self.asteroids + 1] = spawnRandomAsteroid()
+	elseif key == 'space' then
+		score = incrementScore()
+	elseif key == 'd' then
+		lives = decrementLives()
+		if lives == 0 then
+		self.newState = 'game_over'
+		self.newStateData = { score = getScore()}
+		end
 	end
 end
 
@@ -47,9 +59,10 @@ end
 
 function state:draw(width, height)
 	love.graphics.setFont(self.textFont)
-	love.graphics.print('And here\'s where I\'d put my game...', 20, 20)
-	love.graphics.print('IF I HAD ONE!!!', 20, 70)
-
+	-- love.graphics.print('And here\'s where I\'d put my game...', 20, 20)
+	-- love.graphics.print('IF I HAD ONE!!!', 20, 70)
+	drawScore()
+	drawLives()
 	for _, asteroid in pairs(self.asteroids) do
 		asteroid:draw()
 	end
