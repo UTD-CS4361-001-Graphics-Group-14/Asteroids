@@ -1,18 +1,38 @@
-local lives = 3
+local DEFAULT_LIVES = 3
 
-function decrementLives()
-    lives = lives - 1
-    return lives
+local Lives = {}
+
+function Lives:new(x, y, initialLives)
+	local lives = {
+		x = x,
+		y = y,
+		lives = initialLives or DEFAULT_LIVES,
+	}
+
+	setmetatable(lives, self)
+	self.__index = self
+
+	return lives
 end
 
-function setLives(val)
-    lives = val
-    return lives
+function Lives:increment()
+	self.lives = self.lives + 1
 end
 
-function drawLives()
-    width = love.graphics.getWidth()
-    love.graphics.printf("Lives: ".. lives, width-350, 10, 300, "right")
+function Lives:decrement()
+	self.lives = self.lives - 1
 end
 
-return lives
+function Lives:get()
+	return self.lives
+end
+
+function Lives:set(lives)
+	self.lives = lives
+end
+
+function Lives:draw(width, height)
+    love.graphics.printf("Lives: ".. self.lives, width - 350, 10, 300, "right")
+end
+
+return Lives
