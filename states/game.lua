@@ -8,17 +8,62 @@ local lives = require 'entities/life_counter'
 
 state.name = 'game'
 
+local ASTEROID_TARGET_PADDING = 0.5
+local ASTEROID_MIN_SPEED = 50
+local ASTEROID_MAX_SPEED = 250
+
 local function spawnRandomAsteroid()
-	return Asteroid:new(
-		Vector2:new(
-			utils.randBetween(0, love.graphics.getWidth()),
-			utils.randBetween(0, love.graphics.getHeight())
-		),
-		Vector2:newFromMagnitudeAndAngle(
-			utils.randBetween(20, 200),
-			utils.randBetween(0, 360)
-		)
+	local windowWidth, windowHeight = love.graphics.getDimensions()
+
+	local windowPerimeter = 2 * (windowWidth + windowHeight)
+	local spawnPositionLinear = love.math.random(0, windowPerimeter)
+
+	-- top edge
+	local spawnX = spawnPositionLinear
+	local spawnY = 0
+
+	if spawnPositionLinear >= windowWidth then
+		-- right edge
+		spawnPositionLinear = spawnPositionLinear - windowWidth
+		spawnX = windowWidth
+		spawnY = spawnPositionLinear
+
+		if spawnPositionLinear >= windowHeight then
+			-- bottom edge
+			spawnPositionLinear = spawnPositionLinear - windowHeight
+			spawnX = spawnPositionLinear
+			spawnY = windowHeight
+
+			if spawnPositionLinear >= windowWidth then
+				-- left edge
+				spawnPositionLinear = spawnPositionLinear - windowWidth
+				spawnX = 0
+				spawnY = spawnPositionLinear
+			end
+		end
+	end
+
+	local spawnPosition = Vector2:new(spawnX, spawnY)
+	
+	local minTargetX = windowWidth * ASTEROID_TARGET_PADDING / 2
+	local maxTargetX = windowWidth - minTargetX
+	local minTargetY = windowHeight * ASTEROID_TARGET_PADDING / 2
+	local maxTargetY = windowHeight - minTargetY
+
+	local targetPoint = Vector2:new(
+		love.math.random(minTargetX, maxTargetX),
+		love.math.random(minTargetY, maxTargetY)
 	)
+	local spawnVelocity = targetPoint:difference(spawnPosition)
+	                                   :normalized()
+	                                   :scaled(
+	                                       love.math.random(
+	                                           ASTEROID_MIN_SPEED,
+	                                           ASTEROID_MAX_SPEED
+	                                       )
+	                                   )
+	
+	return Asteroid:new(spawnPosition, spawnVelocity)
 end
 
 function state:init(data)
@@ -41,8 +86,8 @@ function state:keypressed(key)
 	elseif key == 'd' then
 		lives = decrementLives()
 		if lives == 0 then
-		self.newState = 'game_over'
-		self.newStateData = { score = getScore()}
+			self.newState = 'game_over'
+			self.newStateData = { score = getScore() }
 		end
 	end
 end

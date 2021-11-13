@@ -27,7 +27,7 @@ function Vector2:sub(v)
 	self.y = self.y - v.y
 end
 
-function Vector2:diff(v)
+function Vector2:difference(v)
 	return Vector2:new(self.x - v.x, self.y - v.y)
 end
 
