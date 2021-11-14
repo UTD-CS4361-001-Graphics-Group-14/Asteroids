@@ -5,6 +5,7 @@ local Vector2 = require 'lib/vector2'
 local utils = require 'lib/utils'
 local Score = require 'entities/score'
 local Lives = require 'entities/life_counter'
+local Ship = require 'entities/ship'
 
 state.name = 'game'
 
@@ -73,6 +74,7 @@ function state:init(data)
 	}
 	self.lives = Lives:new()
 	self.score = Score:new()
+	self.ship = Ship:new(350,570, 400,570, 375,500)
 end
 
 function state:keypressed(key)
@@ -97,6 +99,8 @@ function state:update(dt)
 	for _, asteroid in pairs(self.asteroids) do
 		asteroid:update(dt)
 	end
+
+	self.ship:update(dt)
 end
 
 function state:draw(width, height)
@@ -107,6 +111,7 @@ function state:draw(width, height)
 		asteroid:draw(width, height)
 	end
 
+	self.ship:draw()
 	self.lives:draw(width, height)
 	self.score:draw(width, height)
 end
