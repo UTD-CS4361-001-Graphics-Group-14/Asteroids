@@ -1,6 +1,7 @@
 local state = {}
 
 local Asteroid = require 'entities/asteroid'
+local Bullet = require 'entities/bullet'
 local Vector2 = require 'lib/vector2'
 local utils = require 'lib/utils'
 local Score = require 'entities/score'
@@ -67,11 +68,25 @@ local function spawnRandomAsteroid()
 	return Asteroid:new(spawnPosition, spawnVelocity)
 end
 
+function spawnRandomBullet()
+	local angle = love.math.random() * 2 * math.pi
+
+	local pos = Vector2:new(
+		love.graphics.getWidth() / 2,
+		love.graphics.getHeight() / 2
+	)
+
+	local bullet = Bullet:new(pos, angle)
+
+	return bullet
+end
+
 function state:init(data)
 	self.textFont = love.graphics.newFont('assets/fonts/roboto.ttf', 48)
 	self.asteroids = {
 		spawnRandomAsteroid()
 	}
+	self.bullets = {}
 	self.lives = Lives:new()
 	self.score = Score:new()
 	self.ship = Ship:new(350,570, 400,570, 375,500)
@@ -80,6 +95,8 @@ end
 function state:keypressed(key)
 	if key == 's' then
 		self.asteroids[#self.asteroids + 1] = spawnRandomAsteroid()
+	elseif key == 'b' then
+		self.bullets[#self.bullets + 1] = spawnRandomBullet()
 	elseif key == 'space' then
 		self.score:increment()
 	elseif key == 'd' then
@@ -96,22 +113,30 @@ function state:keyreleased(key)
 end
 
 function state:update(dt)
+	self.ship:update(dt)
+	
 	for _, asteroid in pairs(self.asteroids) do
 		asteroid:update(dt)
 	end
 
-	self.ship:update(dt)
+	for _, bullet in pairs(self.bullets) do
+		bullet:update(dt)
+	end
 end
 
 function state:draw(width, height)
 	love.graphics.setFont(self.textFont)
-	-- love.graphics.print('And here\'s where I\'d put my game...', 20, 20)
-	-- love.graphics.print('IF I HAD ONE!!!', 20, 70)
+
+	self.ship:draw()
+
 	for _, asteroid in pairs(self.asteroids) do
 		asteroid:draw(width, height)
 	end
+	
+	for _, bullet in pairs(self.bullets) do
+		bullet:draw(width, height)
+	end
 
-	self.ship:draw()
 	self.lives:draw(width, height)
 	self.score:draw(width, height)
 end
