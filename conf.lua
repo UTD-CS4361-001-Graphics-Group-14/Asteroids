@@ -7,4 +7,6 @@ function love.conf(t)
 	t.window.title = 'Asteroids!'
 
 	t.window.highdpi = true
+
+	t.window.vsync = 1
 end

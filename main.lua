@@ -12,6 +12,9 @@ function love.load()
 	gameState:init()
 end
 
+local FPS_SAMPLE_INTERVAL = 3 -- seconds
+local timeSinceLastFPSSample = 0
+
 -- Called every frame, just before draw. Do physics calculations, etc.
 function love.update(dt)
 	screenWidth, screenHeight = love.graphics.getDimensions()
@@ -30,6 +33,13 @@ function love.update(dt)
 		else
 			print('[GameState] ERROR: No such state: ' .. newState)
 		end
+	end
+
+	timeSinceLastFPSSample = timeSinceLastFPSSample + dt
+	if timeSinceLastFPSSample >= FPS_SAMPLE_INTERVAL then
+		timeSinceLastFPSSample = timeSinceLastFPSSample - FPS_SAMPLE_INTERVAL
+		local fps = love.timer.getFPS()
+		print('[DEBUG] FPS: ' .. fps)
 	end
 end
 
