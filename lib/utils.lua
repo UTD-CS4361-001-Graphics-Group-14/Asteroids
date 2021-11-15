@@ -63,4 +63,20 @@ function utils.isWithinBounds(point, shape)
 	end
 end
 
+function utils.wrapVector(v, minX, minY, maxX, maxY)
+	print(v)
+
+	if v.x < minX then
+		v.x = v.x + (maxX - minX)
+	elseif v.x > maxX then
+		v.x = v.x - (maxX - minX)
+	end
+
+	if v.y < minY then
+		v.y = v.y + (maxY - minY)
+	elseif v.y > maxY then
+		v.y = v.y - (maxY - minY)
+	end
+end
+
 return utils

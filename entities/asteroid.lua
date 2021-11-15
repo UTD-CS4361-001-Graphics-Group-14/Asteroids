@@ -1,4 +1,5 @@
 local Vector2 = require 'lib/vector2'
+local utils = require 'lib/utils'
 
 local Asteroid = {}
 
@@ -24,18 +25,7 @@ end
 
 function Asteroid:update(dt)
 	self.pos:add(self.vel:product(dt))
-
-	if self.pos.x < 0 then
-		self.pos.x = self.pos.x + love.graphics.getWidth()
-	elseif self.pos.x > love.graphics.getWidth() then
-		self.pos.x = self.pos.x - love.graphics.getWidth()
-	end
-
-	if self.pos.y < 0 then
-		self.pos.y = self.pos.y + love.graphics.getHeight()
-	elseif self.pos.y > love.graphics.getHeight() then
-		self.pos.y = self.pos.y - love.graphics.getHeight()
-	end
+	utils.wrapVector(self.pos, 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
 end
 
 return Asteroid
