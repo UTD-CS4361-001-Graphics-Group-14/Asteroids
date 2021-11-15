@@ -120,9 +120,15 @@ function state:update(dt)
 		asteroid:update(dt)
 	end
 
-	for _, bullet in pairs(self.bullets) do
+	local deadBullets = {}
+
+	for i, bullet in pairs(self.bullets) do
 		bullet:update(dt)
 	end
+
+	utils.filterTable(self.bullets, function(bullet) return bullet.alive end)
+
+	print(#self.bullets)
 end
 
 function state:draw(width, height)

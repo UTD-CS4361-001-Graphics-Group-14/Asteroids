@@ -64,8 +64,6 @@ function utils.isWithinBounds(point, shape)
 end
 
 function utils.wrapVector(v, minX, minY, maxX, maxY)
-	print(v)
-
 	if v.x < minX then
 		v.x = v.x + (maxX - minX)
 	elseif v.x > maxX then
@@ -76,6 +74,23 @@ function utils.wrapVector(v, minX, minY, maxX, maxY)
 		v.y = v.y + (maxY - minY)
 	elseif v.y > maxY then
 		v.y = v.y - (maxY - minY)
+	end
+end
+
+-- adapted from https://stackoverflow.com/a/53038524
+function utils.filterTable(table, fnKeep)
+	local j, n = 1, #table
+
+	for i = 1, n do
+		if fnKeep(table[i], i, j) then
+			if i ~= j then
+				table[j] = table[i]
+				table[i] = nil
+			end
+			j = j + 1
+		else
+			table[i] = nil
+		end
 	end
 end
 
