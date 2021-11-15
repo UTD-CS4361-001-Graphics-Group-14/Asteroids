@@ -127,8 +127,6 @@ function state:update(dt)
 	end
 
 	utils.filterTable(self.bullets, function(bullet) return bullet.alive end)
-
-	print(#self.bullets)
 end
 
 function state:draw(width, height)
