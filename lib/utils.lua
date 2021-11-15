@@ -6,6 +6,26 @@ function utils.randBetween(min, max)
 	return math.random() * (max - min) + min
 end
 
+function utils.pointsToBoundingBox(points)
+	local minX, minY, maxX, maxY = points[1].x, points[1].y, points[1].x, points[1].y
+	
+	for i = 2, #points do
+		local point = points[i]
+		if point.x < minX then
+			minX = point.x
+		elseif point.x > maxX then
+			maxX = point.x
+		end
+		if point.y < minY then
+			minY = point.y
+		elseif point.y > maxY then
+			maxY = point.y
+		end
+	end
+
+	return Vector2:new(minX, minY), Vector2:new(maxX, maxY)
+end
+
 function utils.isWithinCircle(point, circlePos, circleRadius)
 	local dist = point:distance(circlePos)
 	return dist <= circleRadius

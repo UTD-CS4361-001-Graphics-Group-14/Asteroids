@@ -90,7 +90,7 @@ function state:init(data)
 	self.bullets = {}
 	self.lives = Lives:new()
 	self.score = Score:new()
-	self.ship = Ship:new(350,570, 400,570, 375,500)
+	self.ship = Ship:new(Vector2:new(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2))
 end
 
 function state:keypressed(key)

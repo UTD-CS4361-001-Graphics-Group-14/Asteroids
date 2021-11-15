@@ -1,14 +1,20 @@
+local Vector2 = require 'lib/vector2'
+local utils = require 'lib/utils'
+
 local Ship = {}
 
-function Ship:new(x, y, x2, y2, x3, y3)
+local SHIP_MAX_SPEED = 400
+local SHIP_ROT_SPEED = math.pi
+local SHIP_ACCELERATION = 400
+local SHIP_DECELERATION = 100
+
+local SHIP_RADIUS = 20
+
+function Ship:new(pos, ang, vel)
 	local ship = {
-		x = x,
-		y = y,
-		x2 = x2,
-		y2 = y2,
-		x3 = x3,
-		y3 = y3,
-		speed = 200
+		pos = pos,
+		ang = ang or 0,
+		vel = vel or Vector2:new(0, 0),
 	}
 
 	setmetatable(ship, self)
@@ -18,47 +24,39 @@ function Ship:new(x, y, x2, y2, x3, y3)
 end
 
 function Ship:update(dt)
-	if love.keyboard.isDown("left") then
-		self.x = self.x - self.speed * dt
-		self.x2 = self.x2 - self.speed * dt
-		self.x3 = self.x3 - self.speed * dt
-	elseif love.keyboard.isDown("right") then
-		self.x = self.x + self.speed * dt
-		self.x2 = self.x2 + self.speed * dt
-		self.x3 = self.x3 + self.speed * dt
-	elseif love.keyboard.isDown("up") then
-		self.y = self.y - self.speed * dt
-		self.y2 = self.y2 - self.speed * dt
-		self.y3 = self.y3 - self.speed * dt
-	elseif love.keyboard.isDown("down") then
-		self.y = self.y + self.speed * dt
-		self.y2 = self.y2 + self.speed * dt
-		self.y3 = self.y3 + self.speed * dt    
+	local accel = Vector2:new(0, 0)
+
+	if self.vel:magnitude() > 0 then
+		accel = self.vel:reversed():scaled(SHIP_DECELERATION)
 	end
 
-	-- make sure ship remains in the boundary of the window
-	if self.x < 0 then
-		self.x = 0
-		self.x2 = self.x + 50
-		self.x3 = self.x + 25
-	elseif self.y3 < 0 then
-		self.y3 = 0
-		self.y2 = self.y3 + 70
-		self.y = self.y3 + 70
-	elseif self.x2 > love.graphics.getWidth() then
-		self.x2 = love.graphics.getWidth()
-		self.x = love.graphics.getWidth() - 50
-		self.x3 = love.graphics.getWidth() - 25
-	elseif self.y2 > love.graphics.getHeight() then
-		self.y2= love.graphics.getHeight()
-		self.y = love.graphics.getHeight()
-		self.y3 = love.graphics.getHeight() - 70
+	if love.keyboard.isDown('left') then
+		self.ang = self.ang - SHIP_ROT_SPEED * dt
 	end
+	if love.keyboard.isDown('right') then
+		self.ang = self.ang + SHIP_ROT_SPEED * dt
+	end
+	if love.keyboard.isDown('up') then
+		if self.vel:magnitude() <= SHIP_MAX_SPEED then
+			accel:add(Vector2:newFromMagnitudeAndAngle(SHIP_ACCELERATION, self.ang))
+		end
+	end
+
+	self.vel:add(accel * dt)
+	self.pos:add(self.vel * dt)
+	utils.wrapVector(
+		self.pos,
+		-SHIP_RADIUS, -SHIP_RADIUS,
+		love.graphics.getWidth() + SHIP_RADIUS, love.graphics.getHeight() + SHIP_RADIUS
+	)
 end
 
 function Ship:draw()
-	love.graphics.setColor(255, 255, 255)
-	love.graphics.polygon('fill', self.x, self.y, self.x2, self.y2, self.x3, self.y3)
+	love.graphics.setColor(0, 255, 255)
+	love.graphics.circle('fill', self.pos.x, self.pos.y, SHIP_RADIUS)
+	love.graphics.setColor(255, 0, 0)
+	local nosePos = self.pos:sum(Vector2:newFromMagnitudeAndAngle(SHIP_RADIUS, self.ang))
+	love.graphics.line(self.pos.x, self.pos.y, nosePos.x, nosePos.y)
 end
 
 return Ship
