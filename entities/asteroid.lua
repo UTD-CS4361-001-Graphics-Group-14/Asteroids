@@ -18,14 +18,22 @@ function Asteroid:new(pos, vel, size)
 	return asteroid
 end
 
+function Asteroid:_radius()
+	return BASE_ASTEROID_SIZE * self.size
+end
+
 function Asteroid:draw()
 	love.graphics.setColor(255, 255, 255)
-	love.graphics.circle('fill', self.pos.x, self.pos.y, 20 * self.size)
+	love.graphics.circle('fill', self.pos.x, self.pos.y, self:_radius())
 end
 
 function Asteroid:update(dt)
 	self.pos:add(self.vel:product(dt))
-	utils.wrapVector(self.pos, 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+	utils.wrapVector(
+		self.pos,
+		-self:_radius(), -self:_radius(),
+		love.graphics.getWidth() + self:_radius(), love.graphics.getHeight() + self:_radius()
+	)
 end
 
 return Asteroid
