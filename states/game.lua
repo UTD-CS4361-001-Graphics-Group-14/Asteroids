@@ -7,6 +7,7 @@ local utils = require 'lib/utils'
 local Score = require 'entities/score'
 local Lives = require 'entities/life_counter'
 local Ship = require 'entities/ship'
+local resources = require 'assets/resources'
 
 state.name = 'game'
 
@@ -82,7 +83,7 @@ function spawnRandomBullet()
 end
 
 function state:init(data)
-	self.textFont = love.graphics.newFont('assets/fonts/roboto.ttf', 48)
+	self.textFont = resources.fonts.default
 	self.asteroids = {
 		spawnRandomAsteroid()
 	}
@@ -114,7 +115,7 @@ end
 
 function state:update(dt)
 	self.ship:update(dt)
-	
+
 	for _, asteroid in pairs(self.asteroids) do
 		asteroid:update(dt)
 	end

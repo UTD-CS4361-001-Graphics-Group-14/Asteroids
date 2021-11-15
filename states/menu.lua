@@ -1,13 +1,15 @@
 local state = {}
 
+local resources = require 'assets/resources'
+
 state.name = 'menu'
 
 local SELECTED_COLOR = {0.2, 0.8, 1, 1}
 local UNSELECTED_COLOR = {1, 1, 1, 1}
 
 function state:init()
-	self.titleFont = love.graphics.newFont('assets/fonts/major-mono-display.ttf', 96)
-	self.textFont = love.graphics.newFont('assets/fonts/roboto.ttf', 48)
+	self.titleFont = resources.fonts.title
+	self.textFont = resources.fonts.default
 
 	self.cursorPos = 1
 
