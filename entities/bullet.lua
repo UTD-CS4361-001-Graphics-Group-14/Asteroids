@@ -1,4 +1,5 @@
 local Vector2 = require 'lib/vector2'
+local Circle = require 'lib/circle'
 local utils = require 'lib/utils'
 
 local Bullet = {}
@@ -15,6 +16,8 @@ function Bullet:new(pos, ang)
 		aliveTime = 0,
 	}
 
+	bullet.collider = Circle:new(bullet.pos, BULLET_RADIUS)
+	
 	setmetatable(bullet, self)
 	self.__index = self
 
@@ -33,6 +36,10 @@ function Bullet:update(dt)
 			love.graphics.getWidth() + BULLET_RADIUS, love.graphics.getHeight() + BULLET_RADIUS
 		)
 	end
+end
+
+function Bullet:getColliders()
+	return {self.collider}
 end
 
 function Bullet:draw()

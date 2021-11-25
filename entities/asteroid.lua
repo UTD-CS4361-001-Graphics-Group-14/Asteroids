@@ -1,4 +1,5 @@
 local Vector2 = require 'lib/vector2'
+local Circle = require 'lib/circle'
 local utils = require 'lib/utils'
 
 local Asteroid = {}
@@ -14,6 +15,8 @@ function Asteroid:new(pos, vel, size)
 
 	setmetatable(asteroid, self)
 	self.__index = self
+
+	self.collider = Circle:new(asteroid.pos, asteroid:_radius())
 
 	return asteroid
 end
@@ -34,6 +37,10 @@ function Asteroid:update(dt)
 		-self:_radius(), -self:_radius(),
 		love.graphics.getWidth() + self:_radius(), love.graphics.getHeight() + self:_radius()
 	)
+end
+
+function Asteroid:getColliders()
+	return {self.collider}
 end
 
 return Asteroid

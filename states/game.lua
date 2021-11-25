@@ -91,6 +91,7 @@ function state:init(data)
 	self.lives = Lives:new()
 	self.score = Score:new()
 	self.ship = Ship:new(Vector2:new(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2))
+	self.debug = false
 end
 
 function state:keypressed(key)
@@ -106,6 +107,8 @@ function state:keypressed(key)
 			self.newState = 'game_over'
 			self.newStateData = { score = self.score:get() }
 		end
+	elseif key == 'c' then
+		self.debug = not self.debug
 	end
 end
 
@@ -134,14 +137,35 @@ function state:draw(width, height)
 
 	self.ship:draw()
 
+	if self.debug then
+		love.graphics.setColor(0, 255, 0)
+		for _, collider in pairs(self.ship:getColliders()) do
+			collider:draw()
+		end
+	end
+
 	for _, asteroid in pairs(self.asteroids) do
 		asteroid:draw(width, height)
+		if self.debug then
+			for _, collider in pairs(asteroid:getColliders()) do
+				love.graphics.setColor(0, 255, 0)
+				collider:draw()
+			end
+		end
 	end
 	
 	for _, bullet in pairs(self.bullets) do
 		bullet:draw(width, height)
+
+		if self.debug then
+			for _, collider in pairs(bullet:getColliders()) do
+				love.graphics.setColor(0, 255, 0)
+				collider:draw()
+			end
+		end
 	end
 
+	love.graphics.setColor(255, 255, 255)
 	self.lives:draw(width, height)
 	self.score:draw(width, height)
 end

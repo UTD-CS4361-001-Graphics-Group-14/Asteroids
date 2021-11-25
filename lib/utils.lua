@@ -26,6 +26,11 @@ function utils.pointsToBoundingBox(points)
 	return Vector2:new(minX, minY), Vector2:new(maxX, maxY)
 end
 
+function utils.doCirclesOverlap(circle1Pos, circle1Radius, circle2Pos, circle2Radius)
+	local distance = Vector2:new(circle1Pos.x - circle2Pos.x, circle1Pos.y - circle2Pos.y):length()
+	return distance < circle1Radius + circle2Radius
+end
+
 function utils.isWithinCircle(point, circlePos, circleRadius)
 	local dist = point:distance(circlePos)
 	return dist <= circleRadius

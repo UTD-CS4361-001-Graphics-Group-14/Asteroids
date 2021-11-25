@@ -1,4 +1,5 @@
 local Vector2 = require 'lib/vector2'
+local Circle = require 'lib/circle'
 local utils = require 'lib/utils'
 
 local Ship = {}
@@ -9,6 +10,20 @@ local SHIP_ACCELERATION = 400
 local SHIP_DECELERATION = 100
 
 local SHIP_RADIUS = 20
+
+local TRIANGLE_POINTS = {
+	Vector2:newFromMagnitudeAndAngle(SHIP_RADIUS, 0),
+	Vector2:newFromMagnitudeAndAngle(SHIP_RADIUS, 4 * math.pi / 5),
+	Vector2:newFromMagnitudeAndAngle(SHIP_RADIUS * 0.5, math.pi),
+	Vector2:newFromMagnitudeAndAngle(SHIP_RADIUS, 6 * math.pi / 5),
+}
+
+local COLLIDER_CIRCLES = {
+	Circle:new(Vector2:new(0, 0), SHIP_RADIUS * 0.35),
+	Circle:new(Vector2:new(SHIP_RADIUS * 0.5, 0), SHIP_RADIUS * 0.2),
+	Circle:new(Vector2:new(SHIP_RADIUS * 0.6, 0):rotated(4 * math.pi / 5), SHIP_RADIUS * 0.2),
+	Circle:new(Vector2:new(SHIP_RADIUS * 0.6, 0):rotated(6 * math.pi / 5), SHIP_RADIUS * 0.2),
+}
 
 function Ship:new(pos, ang, vel)
 	local ship = {
@@ -51,11 +66,35 @@ function Ship:update(dt)
 	)
 end
 
+function Ship:getNosePos()
+	return self.pos:sum(Vector2:newFromMagnitudeAndAngle(SHIP_RADIUS, self.ang))
+end
+
+function Ship:getColliders()
+	local colliders = {}
+
+	for i, circle in ipairs(COLLIDER_CIRCLES) do
+		colliders[i] = Circle:new(circle.pos:rotated(self.ang):sum(self.pos), circle.radius)
+	end
+
+	return colliders
+end
+
 function Ship:draw()
+	local poly = {}
+	for i = 1, #TRIANGLE_POINTS do
+		local translated = self.pos:sum(TRIANGLE_POINTS[i]:rotated(self.ang))
+		poly[#poly + 1] = translated.x
+		poly[#poly + 1] = translated.y
+	end
 	love.graphics.setColor(0, 255, 255)
-	love.graphics.circle('fill', self.pos.x, self.pos.y, SHIP_RADIUS)
+	local tris = love.math.triangulate(poly)
+	for _, tri in pairs(tris) do
+		love.graphics.polygon('fill', tri)
+	end
+	-- love.graphics.circle('fill', self.pos.x, self.pos.y, SHIP_RADIUS)
 	love.graphics.setColor(255, 0, 0)
-	local nosePos = self.pos:sum(Vector2:newFromMagnitudeAndAngle(SHIP_RADIUS, self.ang))
+	local nosePos = self:getNosePos()
 	love.graphics.line(self.pos.x, self.pos.y, nosePos.x, nosePos.y)
 end
 
