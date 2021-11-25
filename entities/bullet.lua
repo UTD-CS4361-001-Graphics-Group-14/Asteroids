@@ -1,8 +1,8 @@
 local Vector2 = require 'lib/vector2'
 local utils = require 'lib/utils'
 
-local Bullet = {}
 
+local Bullet = {}
 local BULLET_SPEED = 400
 local BULLET_LIFETIME = 1.5 -- seconds
 local BULLET_RADIUS = 5
@@ -34,11 +34,10 @@ function Bullet:update(dt)
 		)
 	end
 end
-
 function Bullet:draw()
 	if not self.alive then return end
 
-	love.graphics.setColor(255, 255, 255)
+	love.graphics.setColor(255,0,0)
 	love.graphics.circle('fill', self.pos.x, self.pos.y, BULLET_RADIUS)
 end
 

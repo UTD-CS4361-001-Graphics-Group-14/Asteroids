@@ -1,9 +1,13 @@
 local Vector2 = require 'lib/vector2'
 local utils = require 'lib/utils'
 
-local Asteroid = {}
+local Asteroid = {
 
-local BASE_ASTEROID_SIZE = 20
+	Radius = 100
+}
+
+
+local BASE_ASTEROID_SIZE = 30
 
 function Asteroid:new(pos, vel, size)
 	local asteroid = {
@@ -23,7 +27,7 @@ function Asteroid:_radius()
 end
 
 function Asteroid:draw()
-	love.graphics.setColor(255, 255, 255)
+	love.graphics.setColor(0,255,0)
 	love.graphics.circle('fill', self.pos.x, self.pos.y, self:_radius())
 end
 

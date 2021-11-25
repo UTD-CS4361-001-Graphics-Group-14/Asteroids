@@ -8,8 +8,9 @@ local SHIP_ROT_SPEED = math.pi
 local SHIP_ACCELERATION = 400
 local SHIP_DECELERATION = 100
 
-local SHIP_RADIUS = 20
-
+local SHIP_RADIUS = 30
+local arenaHeight = 600
+local arenaWidth = 800
 function Ship:new(pos, ang, vel)
 	local ship = {
 		pos = pos,
@@ -52,11 +53,11 @@ function Ship:update(dt)
 end
 
 function Ship:draw()
-	love.graphics.setColor(0, 255, 255)
+
+	love.graphics.setColor(0, 0, 1)
 	love.graphics.circle('fill', self.pos.x, self.pos.y, SHIP_RADIUS)
 	love.graphics.setColor(255, 0, 0)
 	local nosePos = self.pos:sum(Vector2:newFromMagnitudeAndAngle(SHIP_RADIUS, self.ang))
 	love.graphics.line(self.pos.x, self.pos.y, nosePos.x, nosePos.y)
 end
-
 return Ship
