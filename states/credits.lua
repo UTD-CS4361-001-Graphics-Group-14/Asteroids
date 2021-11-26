@@ -5,6 +5,8 @@ local resources = require 'assets/resources'
 state.name = 'credits'
 
 local names = {
+	'CS 4361.001 F21 Group 14',
+	'',
 	'Pavan Kumar Govu',
 	'Eliot Partridge',
 	'Diego Quiroga',
@@ -40,7 +42,7 @@ function state:draw(width, height)
 
 	love.graphics.setFont(self.smallFont)
 	for i = 1, #names do
-		love.graphics.print(names[i], (width - self.smallFont:getWidth(names[i])) / 2, 0.35 * height + i * self.smallFont:getHeight() * 1.2)
+		love.graphics.print(names[i], (width - self.smallFont:getWidth(names[i])) / 2, 0.3 * height + i * self.smallFont:getHeight() * 1.2)
 	end
 
 	love.graphics.setFont(self.textFont)
