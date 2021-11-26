@@ -16,7 +16,7 @@ local YELLOW_CIRCLE_MAX_RADIUS = SHIP_RADIUS * 0.8
 local ORANGE_CIRCLE_MAX_RADIUS = SHIP_RADIUS
 local RED_CIRCLE_MAX_RADIUS = SHIP_RADIUS * 1.2
 
-local EXPLOSION_TIME = 1
+local EXPLOSION_TIME = 0.5
 
 local TRIANGLE_POINTS = {
 	Vector2:newFromMagnitudeAndAngle(SHIP_RADIUS, 0),
@@ -51,6 +51,8 @@ function Ship:update(dt)
 	if not self.alive then return end
 
 	if self.dying > 0 then
+		self.ang = self.ang + dt * SHIP_ROT_SPEED * 5
+
 		self.dying = self.dying - dt
 
 		if self.dying <= 0 then
