@@ -17,7 +17,7 @@ function Asteroid:new(pos, vel, size)
 	setmetatable(asteroid, self)
 	self.__index = self
 
-	self.collider = Circle:new(asteroid.pos, asteroid:_radius())
+	asteroid.collider = Circle:new(asteroid.pos, asteroid:_radius())
 
 	return asteroid
 end
