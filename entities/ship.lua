@@ -6,7 +6,7 @@ local Bullet = require 'entities/bullet'
 local Ship = {}
 
 local SHIP_MAX_SPEED = 400
-local SHIP_ROT_SPEED = math.pi
+local SHIP_ROT_SPEED = 4 * math.pi / 3
 local SHIP_ACCELERATION = 400
 local SHIP_DECELERATION = 100
 

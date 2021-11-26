@@ -4,13 +4,13 @@ local utils = require 'lib/utils'
 
 local Asteroid = {}
 
-local BASE_ASTEROID_SIZE = 20
+local BASE_ASTEROID_SIZE = 15
 
 function Asteroid:new(pos, vel, size)
 	local asteroid = {
 		pos = pos or Vector2:new(0, 0),
 		vel = vel or Vector2:new(0, 0),
-		size = size or 3,
+		size = size or 4,
 		alive = true,
 	}
 
@@ -53,7 +53,7 @@ function Asteroid:kill()
 	local newAsteroids = {}
 
 	if self.size > 1 then
-		local newSize = self.size - 1
+		local newSize = self.size / 2
 		local newVel = self.vel:multiply(1.25)
 
 		newAsteroids[1] = Asteroid:new(self.pos:clone(), newVel:rotated(math.pi / 2), newSize)
