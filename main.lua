@@ -4,6 +4,7 @@ function love.load()
 		menu = require 'states/menu',
 		game = require 'states/game',
 		game_over = require 'states/game_over',
+		credits = require 'states/credits',
 	}
 
 	screenWidth, screenHeight = love.graphics.getDimensions()
