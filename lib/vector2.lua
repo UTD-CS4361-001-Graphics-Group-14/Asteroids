@@ -12,7 +12,7 @@ function Vector2:new(x, y)
 end
 
 function Vector2:random(minLength, maxLength)
-	if maxLength == 0 then
+	if maxLength == nil then
 		maxLength = minLength
 		minLength = 0
 	end
@@ -30,6 +30,8 @@ end
 function Vector2:add(v)
 	self.x = self.x + v.x
 	self.y = self.y + v.y
+	
+	return self
 end
 
 function Vector2:sum(v)
@@ -42,6 +44,8 @@ Vector2.__add = Vector2.sum
 function Vector2:sub(v)
 	self.x = self.x - v.x
 	self.y = self.y - v.y
+
+	return self
 end
 
 function Vector2:difference(v)
@@ -54,6 +58,8 @@ Vector2.__sub = Vector2.difference
 function Vector2:multiply(amt)
 	self.x = self.x * amt
 	self.y = self.y * amt
+
+	return self
 end
 
 function Vector2:product(amt)
@@ -66,6 +72,8 @@ Vector2.__mul = Vector2.product
 function Vector2:divide(amt)
 	self.x = self.x / amt
 	self.y = self.y / amt
+
+	return self
 end
 
 function Vector2:quotient(amt)
@@ -99,6 +107,8 @@ function Vector2:normalize()
 	local mag = self:magnitude()
 	self.x = self.x / mag
 	self.y = self.y / mag
+
+	return self
 end
 
 function Vector2:normalized()
@@ -112,6 +122,8 @@ Vector2.__bnot = Vector2.normalized
 function Vector2:reverse()
 	self.x = -self.x
 	self.y = -self.y
+
+	return self
 end
 
 function Vector2:reversed()
@@ -126,6 +138,8 @@ function Vector2:rotate(angle)
 	local y = self.y
 	self.x = x * math.cos(angle) - y * math.sin(angle)
 	self.y = x * math.sin(angle) + y * math.cos(angle)
+
+	return self
 end
 
 function Vector2:rotated(angle)
@@ -138,6 +152,8 @@ function Vector2:scale(magnitude)
 	local mag = self:magnitude()
 	self.x = self.x / mag * magnitude
 	self.y = self.y / mag * magnitude
+
+	return self
 end
 
 function Vector2:scaled(magnitude)
@@ -152,6 +168,8 @@ function Vector2:project(v)
 	
 	self.x = proj * v.x
 	self.y = proj * v.y
+
+	return self
 end
 
 function Vector2:projected(v)
