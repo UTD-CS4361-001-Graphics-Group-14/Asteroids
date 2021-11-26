@@ -15,6 +15,9 @@ local ASTEROID_TARGET_PADDING = 0.5
 local ASTEROID_MIN_SPEED = 50
 local ASTEROID_MAX_SPEED = 250
 
+local MIN_NEXT_ASTEROID_DELAY = 3
+local MAX_NEXT_ASTEROID_DELAY = 6
+
 local function spawnRandomAsteroid()
 	local windowWidth, windowHeight = love.graphics.getDimensions()
 
@@ -92,6 +95,7 @@ function state:init(data)
 	self.score = Score:new()
 	self.ship = Ship:new(Vector2:new(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2))
 	self.debug = false
+	self.nextAsteroidDelay = love.math.random(MIN_NEXT_ASTEROID_DELAY, MAX_NEXT_ASTEROID_DELAY)
 end
 
 function state:keypressed(key)
@@ -168,6 +172,14 @@ function state:update(dt)
 
 	utils.filterTable(self.asteroids, function(asteroid) return asteroid.alive end)
 	utils.filterTable(self.bullets, function(bullet) return bullet.alive end)
+
+	self.nextAsteroidDelay = self.nextAsteroidDelay - dt
+
+	if self.nextAsteroidDelay <= 0 then
+		self.asteroids[#self.asteroids + 1] = spawnRandomAsteroid()
+		self.nextAsteroidDelay = love.math.random(MIN_NEXT_ASTEROID_DELAY, MAX_NEXT_ASTEROID_DELAY)
+	end
+
 	utils.extendTable(self.asteroids, newAsteroids)
 end
 
