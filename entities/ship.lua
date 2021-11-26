@@ -131,19 +131,20 @@ function Ship:draw()
 	for _, tri in pairs(tris) do
 		love.graphics.polygon('fill', tri)
 	end
+end
 
-	-- explosion animation
-	if self.dying > 0 then
-		local r = (EXPLOSION_TIME - self.dying) / EXPLOSION_TIME
-		love.graphics.setColor(255, 0, 0)
-		love.graphics.circle('fill', self.pos.x, self.pos.y, r * (RED_CIRCLE_MAX_RADIUS + math.random() * RED_CIRCLE_MAX_RADIUS / 4))
-		love.graphics.setColor(255, 127, 0)
-		love.graphics.circle('fill', self.pos.x, self.pos.y, r * (ORANGE_CIRCLE_MAX_RADIUS + math.random() * ORANGE_CIRCLE_MAX_RADIUS / 4))
-		love.graphics.setColor(255, 255, 0)
-		love.graphics.circle('fill', self.pos.x, self.pos.y, r * (YELLOW_CIRCLE_MAX_RADIUS + math.random() * YELLOW_CIRCLE_MAX_RADIUS / 4))
-		love.graphics.setColor(255, 255, 255)
-		love.graphics.circle('fill', self.pos.x, self.pos.y, r * (WHITE_CIRCLE_MAX_RADIUS + math.random() * WHITE_CIRCLE_MAX_RADIUS / 4))
-	end
+function Ship:drawExplosion()
+	if self.dying <= 0 then return end
+
+	local r = (EXPLOSION_TIME - self.dying) / EXPLOSION_TIME
+	love.graphics.setColor(255, 0, 0)
+	love.graphics.circle('fill', self.pos.x, self.pos.y, r * (RED_CIRCLE_MAX_RADIUS + math.random() * RED_CIRCLE_MAX_RADIUS / 4))
+	love.graphics.setColor(255, 127, 0)
+	love.graphics.circle('fill', self.pos.x, self.pos.y, r * (ORANGE_CIRCLE_MAX_RADIUS + math.random() * ORANGE_CIRCLE_MAX_RADIUS / 4))
+	love.graphics.setColor(255, 255, 0)
+	love.graphics.circle('fill', self.pos.x, self.pos.y, r * (YELLOW_CIRCLE_MAX_RADIUS + math.random() * YELLOW_CIRCLE_MAX_RADIUS / 4))
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.circle('fill', self.pos.x, self.pos.y, r * (WHITE_CIRCLE_MAX_RADIUS + math.random() * WHITE_CIRCLE_MAX_RADIUS / 4))
 end
 
 return Ship

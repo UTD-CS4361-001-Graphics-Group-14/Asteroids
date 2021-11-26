@@ -137,15 +137,24 @@ function state:update(dt)
 	for _, asteroid in pairs(self.asteroids) do
 		asteroid:update(dt)
 
-		for _, bullet in pairs(self.bullets) do
-			for _, cAsteroid in pairs(asteroid:getColliders()) do
+		for _, cAsteroid in pairs(asteroid:getColliders()) do
+			for _, bullet in pairs(self.bullets) do
 				for _, cBullet in pairs(bullet:getColliders()) do
 					if utils.doCirclesOverlap(cAsteroid, cBullet) then
 						utils.extendTable(newAsteroids, asteroid:kill())
 						bullet:kill()
 
 						self.score:increment()
+
+						break
 					end
+				end
+			end
+
+			for _, cShip in pairs(self.ship:getColliders()) do
+				if utils.doCirclesOverlap(cAsteroid, cShip) then
+					self.ship:kill()
+					break
 				end
 			end
 		end
@@ -195,6 +204,8 @@ function state:draw(width, height)
 			end
 		end
 	end
+
+	self.ship:drawExplosion()
 
 	love.graphics.setColor(255, 255, 255)
 	self.lives:draw(width, height)
