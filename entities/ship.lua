@@ -10,6 +10,12 @@ local SHIP_ACCELERATION = 400
 local SHIP_DECELERATION = 100
 
 local SHIP_RADIUS = 20
+local WHITE_CIRCLE_MAX_RADIUS = SHIP_RADIUS * 0.6
+local YELLOW_CIRCLE_MAX_RADIUS = SHIP_RADIUS * 0.8
+local ORANGE_CIRCLE_MAX_RADIUS = SHIP_RADIUS
+local RED_CIRCLE_MAX_RADIUS = SHIP_RADIUS * 1.2
+
+local EXPLOSION_TIME = 1
 
 local TRIANGLE_POINTS = {
 	Vector2:newFromMagnitudeAndAngle(SHIP_RADIUS, 0),
@@ -28,8 +34,10 @@ local COLLIDER_CIRCLES = {
 function Ship:new(pos, ang, vel)
 	local ship = {
 		pos = pos,
-		ang = ang or 0,
+		ang = ang or love.math.random(0, 2 * math.pi),
 		vel = vel or Vector2:new(0, 0),
+		dying = 0,
+		alive = true,
 	}
 
 	setmetatable(ship, self)
@@ -39,6 +47,18 @@ function Ship:new(pos, ang, vel)
 end
 
 function Ship:update(dt)
+	if not self.alive then return end
+
+	if self.dying > 0 then
+		self.dying = self.dying - dt
+
+		if self.dying <= 0 then
+			self.alive = false
+		end
+
+		return
+	end
+
 	local accel = Vector2:new(0, 0)
 
 	if self.vel:magnitude() > 0 then
@@ -80,7 +100,13 @@ function Ship:getColliders()
 	return colliders
 end
 
+function Ship:kill()
+	self.dying = EXPLOSION_TIME
+end
+
 function Ship:draw()
+	if not self.alive then return end
+
 	local poly = {}
 	for i = 1, #TRIANGLE_POINTS do
 		local translated = self.pos:sum(TRIANGLE_POINTS[i]:rotated(self.ang))
@@ -92,10 +118,19 @@ function Ship:draw()
 	for _, tri in pairs(tris) do
 		love.graphics.polygon('fill', tri)
 	end
-	-- love.graphics.circle('fill', self.pos.x, self.pos.y, SHIP_RADIUS)
-	love.graphics.setColor(255, 0, 0)
-	local nosePos = self:getNosePos()
-	love.graphics.line(self.pos.x, self.pos.y, nosePos.x, nosePos.y)
+
+	-- explosion animation
+	if self.dying > 0 then
+		local r = (EXPLOSION_TIME - self.dying) / EXPLOSION_TIME
+		love.graphics.setColor(255, 0, 0)
+		love.graphics.circle('fill', self.pos.x, self.pos.y, r * (RED_CIRCLE_MAX_RADIUS + math.random() * RED_CIRCLE_MAX_RADIUS / 4))
+		love.graphics.setColor(255, 127, 0)
+		love.graphics.circle('fill', self.pos.x, self.pos.y, r * (ORANGE_CIRCLE_MAX_RADIUS + math.random() * ORANGE_CIRCLE_MAX_RADIUS / 4))
+		love.graphics.setColor(255, 255, 0)
+		love.graphics.circle('fill', self.pos.x, self.pos.y, r * (YELLOW_CIRCLE_MAX_RADIUS + math.random() * YELLOW_CIRCLE_MAX_RADIUS / 4))
+		love.graphics.setColor(255, 255, 255)
+		love.graphics.circle('fill', self.pos.x, self.pos.y, r * (WHITE_CIRCLE_MAX_RADIUS + math.random() * WHITE_CIRCLE_MAX_RADIUS / 4))
+	end
 end
 
 return Ship

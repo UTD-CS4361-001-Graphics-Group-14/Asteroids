@@ -102,11 +102,7 @@ function state:keypressed(key)
 	elseif key == 'space' then
 		self.score:increment()
 	elseif key == 'd' then
-		self.lives:decrement()
-		if self.lives:get() == 0 then
-			self.newState = 'game_over'
-			self.newStateData = { score = self.score:get() }
-		end
+		self.ship:kill()
 	elseif key == 'c' then
 		self.debug = not self.debug
 	end
@@ -118,6 +114,20 @@ end
 
 function state:update(dt)
 	self.ship:update(dt)
+
+	if not self.ship.alive then
+		self.lives:decrement()
+		if self.lives:get() == 0 then
+			self.newState = 'game_over'
+			self.newStateData = { score = self.score:get() }
+		end
+
+		self.ship = Ship:new(Vector2:new(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2))
+		self.asteroids = {spawnRandomAsteroid()}
+		self.bullets = {}
+
+		return
+	end
 
 	for _, asteroid in pairs(self.asteroids) do
 		asteroid:update(dt)
