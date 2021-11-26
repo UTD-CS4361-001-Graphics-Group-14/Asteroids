@@ -1,6 +1,7 @@
 local Vector2 = require 'lib/vector2'
 local Circle = require 'lib/circle'
 local utils = require 'lib/utils'
+local Bullet = require 'entities/bullet'
 
 local Ship = {}
 
@@ -86,8 +87,17 @@ function Ship:update(dt)
 	)
 end
 
+function Ship:shouldUpdate()
+	return self.alive and self.dying <= 0
+end
+
 function Ship:getNosePos()
 	return self.pos:sum(Vector2:newFromMagnitudeAndAngle(SHIP_RADIUS, self.ang))
+end
+
+function Ship:fire()
+	if not self:shouldUpdate() then return end
+	return Bullet:new(self:getNosePos(), self.ang)
 end
 
 function Ship:getColliders()
@@ -101,6 +111,7 @@ function Ship:getColliders()
 end
 
 function Ship:kill()
+	if not self:shouldUpdate() then return end
 	self.dying = EXPLOSION_TIME
 end
 

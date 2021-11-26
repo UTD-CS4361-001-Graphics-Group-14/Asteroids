@@ -97,10 +97,8 @@ end
 function state:keypressed(key)
 	if key == 's' then
 		self.asteroids[#self.asteroids + 1] = spawnRandomAsteroid()
-	elseif key == 'b' then
-		self.bullets[#self.bullets + 1] = spawnRandomBullet()
 	elseif key == 'space' then
-		self.score:increment()
+		self.bullets[#self.bullets + 1] = self.ship:fire()
 	elseif key == 'd' then
 		self.ship:kill()
 	elseif key == 'c' then
