@@ -27,7 +27,7 @@ end
 function Bullet:update(dt)
 	self.aliveTime = self.aliveTime + dt
 	if self.aliveTime > BULLET_LIFETIME then
-		self.alive = false
+		self:kill()
 	else
 		self.pos:add(self.vel:product(dt))
 		utils.wrapVector(
@@ -36,6 +36,10 @@ function Bullet:update(dt)
 			love.graphics.getWidth() + BULLET_RADIUS, love.graphics.getHeight() + BULLET_RADIUS
 		)
 	end
+end
+
+function Bullet:kill()
+	self.alive = false
 end
 
 function Bullet:getColliders()

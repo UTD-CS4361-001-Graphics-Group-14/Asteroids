@@ -118,6 +118,8 @@ end
 function state:update(dt)
 	self.ship:update(dt)
 
+	local newAsteroids = {}
+
 	if not self.ship.alive then
 		self.lives:decrement()
 		if self.lives:get() == 0 then
@@ -134,6 +136,19 @@ function state:update(dt)
 
 	for _, asteroid in pairs(self.asteroids) do
 		asteroid:update(dt)
+
+		for _, bullet in pairs(self.bullets) do
+			for _, cAsteroid in pairs(asteroid:getColliders()) do
+				for _, cBullet in pairs(bullet:getColliders()) do
+					if utils.doCirclesOverlap(cAsteroid, cBullet) then
+						utils.extendTable(newAsteroids, asteroid:kill())
+						bullet:kill()
+
+						self.score:increment()
+					end
+				end
+			end
+		end
 	end
 
 	local deadBullets = {}
@@ -144,6 +159,7 @@ function state:update(dt)
 
 	utils.filterTable(self.asteroids, function(asteroid) return asteroid.alive end)
 	utils.filterTable(self.bullets, function(bullet) return bullet.alive end)
+	utils.extendTable(self.asteroids, newAsteroids)
 end
 
 function state:draw(width, height)
