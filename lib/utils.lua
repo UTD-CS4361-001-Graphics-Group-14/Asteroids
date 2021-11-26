@@ -6,9 +6,15 @@ function utils.randBetween(min, max)
 	return math.random() * (max - min) + min
 end
 
+function utils.extendTable(t, other)
+	for _, v in pairs(other) do
+		t[#t + 1] = v
+	end
+end
+
 function utils.pointsToBoundingBox(points)
 	local minX, minY, maxX, maxY = points[1].x, points[1].y, points[1].x, points[1].y
-	
+
 	for i = 2, #points do
 		local point = points[i]
 		if point.x < minX then

@@ -65,7 +65,7 @@ local function spawnRandomAsteroid()
 	                                           ASTEROID_MAX_SPEED
 	                                       )
 	                                   )
-	
+
 	return Asteroid:new(spawnPosition, spawnVelocity)
 end
 
@@ -103,6 +103,11 @@ function state:keypressed(key)
 		self.ship:kill()
 	elseif key == 'c' then
 		self.debug = not self.debug
+	elseif key == 'e' then
+		if #self.asteroids == 0 then return end
+		local randomAsteroid = self.asteroids[love.math.random(1, #self.asteroids)]
+		local newAsteroids = randomAsteroid:kill()
+		utils.extendTable(self.asteroids, newAsteroids)
 	end
 end
 
@@ -137,6 +142,7 @@ function state:update(dt)
 		bullet:update(dt)
 	end
 
+	utils.filterTable(self.asteroids, function(asteroid) return asteroid.alive end)
 	utils.filterTable(self.bullets, function(bullet) return bullet.alive end)
 end
 
@@ -154,20 +160,21 @@ function state:draw(width, height)
 
 	for _, asteroid in pairs(self.asteroids) do
 		asteroid:draw(width, height)
+
 		if self.debug then
+			love.graphics.setColor(0, 255, 0)
 			for _, collider in pairs(asteroid:getColliders()) do
-				love.graphics.setColor(0, 255, 0)
 				collider:draw()
 			end
 		end
 	end
-	
+
 	for _, bullet in pairs(self.bullets) do
 		bullet:draw(width, height)
 
 		if self.debug then
+			love.graphics.setColor(0, 255, 0)
 			for _, collider in pairs(bullet:getColliders()) do
-				love.graphics.setColor(0, 255, 0)
 				collider:draw()
 			end
 		end

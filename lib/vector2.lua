@@ -11,6 +11,10 @@ function Vector2:new(x, y)
 	return v
 end
 
+function Vector2:clone()
+	return Vector2:new(self.x, self.y)
+end
+
 function Vector2:random(minLength, maxLength)
 	if maxLength == nil then
 		maxLength = minLength
@@ -30,7 +34,7 @@ end
 function Vector2:add(v)
 	self.x = self.x + v.x
 	self.y = self.y + v.y
-	
+
 	return self
 end
 
@@ -165,7 +169,7 @@ function Vector2:project(v)
 	local mag = self:magnitude()
 	local dot = self:dot(v)
 	local proj = dot / (mag * mag)
-	
+
 	self.x = proj * v.x
 	self.y = proj * v.y
 

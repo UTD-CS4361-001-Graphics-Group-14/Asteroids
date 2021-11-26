@@ -17,7 +17,7 @@ function Bullet:new(pos, ang)
 	}
 
 	bullet.collider = Circle:new(bullet.pos, BULLET_RADIUS)
-	
+
 	setmetatable(bullet, self)
 	self.__index = self
 
