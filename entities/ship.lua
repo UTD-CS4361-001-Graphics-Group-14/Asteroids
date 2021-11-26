@@ -28,8 +28,8 @@ local TRIANGLE_POINTS = {
 local COLLIDER_CIRCLES = {
 	Circle:new(Vector2:new(0, 0), SHIP_RADIUS * 0.35),
 	Circle:new(Vector2:new(SHIP_RADIUS * 0.5, 0), SHIP_RADIUS * 0.2),
-	Circle:new(Vector2:new(SHIP_RADIUS * 0.6, 0):rotated(4 * math.pi / 5), SHIP_RADIUS * 0.2),
-	Circle:new(Vector2:new(SHIP_RADIUS * 0.6, 0):rotated(6 * math.pi / 5), SHIP_RADIUS * 0.2),
+	Circle:new(Vector2:new(SHIP_RADIUS * 0.6, 0):rotate(4 * math.pi / 5), SHIP_RADIUS * 0.2),
+	Circle:new(Vector2:new(SHIP_RADIUS * 0.6, 0):rotate(6 * math.pi / 5), SHIP_RADIUS * 0.2),
 }
 
 function Ship:new(pos, ang, vel)
@@ -104,7 +104,7 @@ function Ship:getColliders()
 	local colliders = {}
 
 	for i, circle in ipairs(COLLIDER_CIRCLES) do
-		colliders[i] = Circle:new(circle.pos:rotated(self.ang):sum(self.pos), circle.radius)
+		colliders[i] = Circle:new(circle.pos:rotated(self.ang):add(self.pos), circle.radius)
 	end
 
 	return colliders

@@ -58,8 +58,8 @@ local function spawnRandomAsteroid()
 		love.math.random(minTargetY, maxTargetY)
 	)
 	local spawnVelocity = targetPoint:difference(spawnPosition)
-	                                   :normalized()
-	                                   :scaled(
+	                                   :normalize()
+	                                   :scale(
 	                                       love.math.random(
 	                                           ASTEROID_MIN_SPEED,
 	                                           ASTEROID_MAX_SPEED
