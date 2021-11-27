@@ -73,19 +73,6 @@ local function spawnRandomAsteroid()
 	return Asteroid:new(spawnPosition, spawnVelocity)
 end
 
-function spawnRandomBullet()
-	local angle = love.math.random() * 2 * math.pi
-
-	local pos = Vector2:new(
-		scale.ow / 2,
-		scale.oh / 2
-	)
-
-	local bullet = Bullet:new(pos, angle)
-
-	return bullet
-end
-
 function state:init(data)
 	self.background = resources.background.bg
 	self.asteroids = {
