@@ -20,7 +20,7 @@ local MIN_NEXT_ASTEROID_DELAY = 3
 local MAX_NEXT_ASTEROID_DELAY = 6
 
 local function spawnRandomAsteroid()
-	local windowWidth, windowHeight = love.graphics.getDimensions()
+	local windowWidth, windowHeight = scale.ow, scale.oh
 
 	local windowPerimeter = 2 * (windowWidth + windowHeight)
 	local spawnPositionLinear = love.math.random(0, windowPerimeter)
