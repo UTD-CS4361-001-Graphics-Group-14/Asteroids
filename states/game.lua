@@ -11,7 +11,6 @@ local resources = require 'assets/resources'
 local scale = require 'lib/scale'
 
 state.name = 'game'
-bgmusic = resources.audio.bgmusic
 
 local ASTEROID_TARGET_PADDING = 0.5
 local ASTEROID_MIN_SPEED = 20
@@ -88,6 +87,10 @@ function state:init(data)
 	self.debug = false
 	self.nextAsteroidDelay = love.math.random(MIN_NEXT_ASTEROID_DELAY, MAX_NEXT_ASTEROID_DELAY)
 	self.shotDelay = 0
+
+	self.bgMusic = resources.audio.bgmusic
+	self.bgMusic:setVolume(0.5)
+	love.audio.play(self.bgMusic)
 end
 
 function state:keypressed(key)
@@ -115,7 +118,6 @@ function state:keyreleased(key)
 end
 
 function state:update(dt)
-	love.audio.play(bgmusic)
 	if self.shotDelay > 0 then
 		self.shotDelay = self.shotDelay - dt
 	end
@@ -129,6 +131,7 @@ function state:update(dt)
 		if self.lives:get() == 0 then
 			self.newState = 'game_over'
 			self.newStateData = { score = self.score:get() }
+			self.bgMusic:stop()
 		end
 
 		self.ship = Ship:new(Vector2:new(scale.ow / 2, scale.oh / 2))
