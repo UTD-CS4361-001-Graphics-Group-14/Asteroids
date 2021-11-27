@@ -87,6 +87,7 @@ end
 
 function state:init(data)
 	self.textFont = resources.fonts.default
+	self.background = resources.background.bg
 	self.asteroids = {
 		spawnRandomAsteroid()
 	}
@@ -185,6 +186,7 @@ end
 
 function state:draw(width, height)
 	love.graphics.setFont(self.textFont)
+	love.graphics.draw(self.background)
 
 	self.ship:draw()
 

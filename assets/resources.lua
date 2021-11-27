@@ -6,4 +6,8 @@ resources.fonts = {
 	title = love.graphics.newFont('assets/fonts/major-mono-display.ttf', 96),
 }
 
+resources.background = {
+	bg = love.graphics.newImage('assets/background/space.png')
+}
+
 return resources
