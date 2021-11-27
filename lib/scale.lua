@@ -1,5 +1,9 @@
 local scale = {}
 
+local function r(n)
+	return math.floor(n + 0.5)
+end
+
 function scale:_init(w, h)
 	self.ow = w
 	self.oh = h
@@ -22,15 +26,15 @@ function scale:_resize(w, h)
 end
 
 function scale:n(n)
-	return n * self.scale
+	return r(n * self.scale)
 end
 
 function scale:X(x)
-	return self:n(x) + self.xPad
+	return r(x * self.scale + self.xPad)
 end
 
 function scale:Y(y)
-	return self:n(y) + self.yPad
+	return r(y * self.scale + self.yPad)
 end
 
 function scale:_padding()

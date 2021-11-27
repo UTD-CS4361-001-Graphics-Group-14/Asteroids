@@ -4,7 +4,6 @@ local Vector2 = require 'lib/vector2'
 local scale = require 'lib/scale'
 
 function utils.centeredText(str, y)
-
 	love.graphics.print(str, scale:X(scale.ow / 2) - love.graphics.getFont():getWidth(str) / 2, scale:Y(y))
 end
 

@@ -8,6 +8,8 @@ function love.conf(t)
 
 	t.window.highdpi = true
 
+	t.window.resizable = true
+
 	t.window.width = 800
 	t.window.height = 800
 
