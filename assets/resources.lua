@@ -9,11 +9,11 @@ local fonts = {
 }
 
 resources.background = {
-	bg = love.graphics.newImage('assets/background/space.png')
+	bg = love.graphics.newImage('assets/background/space.png'),
 }
 
 resources.audio = {
-	bgmusic = love.audio.newSource('/assets/audio/delay.mp3', 'stream')
+	bgmusic = love.audio.newSource('/assets/audio/delay.mp3', 'stream'),
 }
 
 resources.fonts = {}

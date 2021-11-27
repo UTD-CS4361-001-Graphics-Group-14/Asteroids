@@ -90,6 +90,7 @@ function state:init(data)
 
 	self.bgMusic = resources.audio.bgmusic
 	self.bgMusic:setVolume(0.5)
+	self.bgMusic:setLooping(true)
 	love.audio.play(self.bgMusic)
 end
 
