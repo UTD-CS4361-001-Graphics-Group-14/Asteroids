@@ -5,7 +5,7 @@ local scale = require 'lib/scale'
 
 local Bullet = {}
 
-local BULLET_SPEED = 400
+local BULLET_SPEED = 500
 local BULLET_LIFETIME = 1.5 -- seconds
 local BULLET_RADIUS = 5
 

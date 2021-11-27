@@ -19,6 +19,8 @@ local ASTEROID_MAX_SPEED = 50
 local MIN_NEXT_ASTEROID_DELAY = 3
 local MAX_NEXT_ASTEROID_DELAY = 6
 
+local SHOT_DELAY = 0.175
+
 local function spawnRandomAsteroid()
 	local windowWidth, windowHeight = scale.ow, scale.oh
 
@@ -84,13 +86,17 @@ function state:init(data)
 	self.ship = Ship:new(Vector2:new(scale.ow / 2, scale.oh / 2))
 	self.debug = false
 	self.nextAsteroidDelay = love.math.random(MIN_NEXT_ASTEROID_DELAY, MAX_NEXT_ASTEROID_DELAY)
+	self.shotDelay = 0
 end
 
 function state:keypressed(key)
 	if key == 's' then
 		self.asteroids[#self.asteroids + 1] = spawnRandomAsteroid()
 	elseif key == 'space' then
-		self.bullets[#self.bullets + 1] = self.ship:fire()
+		if self.shotDelay <= 0 then
+			self.bullets[#self.bullets + 1] = self.ship:fire()
+			self.shotDelay = SHOT_DELAY
+		end
 	elseif key == 'd' then
 		self.ship:kill()
 	elseif key == 'c' then
@@ -108,6 +114,10 @@ function state:keyreleased(key)
 end
 
 function state:update(dt)
+	if self.shotDelay > 0 then
+		self.shotDelay = self.shotDelay - dt
+	end
+
 	self.ship:update(dt)
 
 	local newAsteroids = {}
