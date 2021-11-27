@@ -1,6 +1,7 @@
 local state = {}
 
 local resources = require 'assets/resources'
+local utils = require 'lib/utils'
 
 state.name = 'game_over'
 
@@ -8,9 +9,6 @@ local SELECTED_COLOR = {0.2, 0.8, 1, 1}
 local UNSELECTED_COLOR = {1, 1, 1, 1}
 
 function state:init(data)
-	self.titleFont = resources.fonts.title
-	self.textFont = resources.fonts.default
-
 	self.cursorPos = 1
 
 	self.newState = nil
@@ -41,28 +39,28 @@ end
 function state:keyreleased(key) end
 
 function state:update(dt)
-	
+
 end
 
 function state:draw(width, height)
 	love.graphics.setColor(unpack(UNSELECTED_COLOR))
 
-	love.graphics.setFont(self.titleFont)
-	love.graphics.print('Game over', (width - self.titleFont:getWidth('Game over')) / 2, 0.1 * height)
+	love.graphics.setFont(resources.fonts.title)
+	utils.centeredText('Game Over', 0.1 * height)
 
-	love.graphics.setFont(self.textFont)
+	love.graphics.setFont(resources.fonts.default)
 	local scoreText = 'Score: ' .. self.score
-	love.graphics.print(scoreText, (width - self.textFont:getWidth(scoreText)) / 2, 0.3 * height)
+	utils.centeredText(scoreText, 0.3 * height)
 
 	if self.cursorPos == 1 then
 		love.graphics.setColor(unpack(SELECTED_COLOR))
 	end
-	love.graphics.print('Restart', (width - self.textFont:getWidth('Restart')) / 2, 0.65 * height)
+	utils.centeredText('Restart', 0.65 * height)
 	love.graphics.setColor(unpack(UNSELECTED_COLOR))
 	if self.cursorPos == 2 then
 		love.graphics.setColor(unpack(SELECTED_COLOR))
 	end
-	love.graphics.print('Quit', (width - self.textFont:getWidth('Quit')) / 2, 0.8 * height)
+	utils.centeredText('Quit', 0.8 * height)
 end
 
 return state

@@ -2,6 +2,7 @@ local Vector2 = require 'lib/vector2'
 local Circle = require 'lib/circle'
 local utils = require 'lib/utils'
 local Bullet = require 'entities/bullet'
+local scale = require 'lib/scale'
 
 local Ship = {}
 
@@ -85,7 +86,7 @@ function Ship:update(dt)
 	utils.wrapVector(
 		self.pos,
 		-SHIP_RADIUS, -SHIP_RADIUS,
-		love.graphics.getWidth() + SHIP_RADIUS, love.graphics.getHeight() + SHIP_RADIUS
+		scale.ow + SHIP_RADIUS, scale.oh + SHIP_RADIUS
 	)
 end
 
@@ -123,8 +124,8 @@ function Ship:draw()
 	local poly = {}
 	for i = 1, #TRIANGLE_POINTS do
 		local translated = self.pos:sum(TRIANGLE_POINTS[i]:rotated(self.ang))
-		poly[#poly + 1] = translated.x
-		poly[#poly + 1] = translated.y
+		poly[#poly + 1] = scale:X(translated.x)
+		poly[#poly + 1] = scale:Y(translated.y)
 	end
 	love.graphics.setColor(0, 255, 255)
 	local tris = love.math.triangulate(poly)
@@ -138,13 +139,13 @@ function Ship:drawExplosion()
 
 	local r = (EXPLOSION_TIME - self.dying) / EXPLOSION_TIME
 	love.graphics.setColor(255, 0, 0)
-	love.graphics.circle('fill', self.pos.x, self.pos.y, r * (RED_CIRCLE_MAX_RADIUS + math.random() * RED_CIRCLE_MAX_RADIUS / 4))
+	love.graphics.circle('fill', scale:X(self.pos.x), scale:Y(self.pos.y), scale:n(r * (RED_CIRCLE_MAX_RADIUS + math.random() * RED_CIRCLE_MAX_RADIUS / 4)))
 	love.graphics.setColor(255, 127, 0)
-	love.graphics.circle('fill', self.pos.x, self.pos.y, r * (ORANGE_CIRCLE_MAX_RADIUS + math.random() * ORANGE_CIRCLE_MAX_RADIUS / 4))
+	love.graphics.circle('fill', scale:X(self.pos.x), scale:Y(self.pos.y), scale:n(r * (ORANGE_CIRCLE_MAX_RADIUS + math.random() * ORANGE_CIRCLE_MAX_RADIUS / 4)))
 	love.graphics.setColor(255, 255, 0)
-	love.graphics.circle('fill', self.pos.x, self.pos.y, r * (YELLOW_CIRCLE_MAX_RADIUS + math.random() * YELLOW_CIRCLE_MAX_RADIUS / 4))
+	love.graphics.circle('fill', scale:X(self.pos.x), scale:Y(self.pos.y), scale:n(r * (YELLOW_CIRCLE_MAX_RADIUS + math.random() * YELLOW_CIRCLE_MAX_RADIUS / 4)))
 	love.graphics.setColor(255, 255, 255)
-	love.graphics.circle('fill', self.pos.x, self.pos.y, r * (WHITE_CIRCLE_MAX_RADIUS + math.random() * WHITE_CIRCLE_MAX_RADIUS / 4))
+	love.graphics.circle('fill', scale:X(self.pos.x), scale:Y(self.pos.y), scale:n(r * (WHITE_CIRCLE_MAX_RADIUS + math.random() * WHITE_CIRCLE_MAX_RADIUS / 4)))
 end
 
 return Ship

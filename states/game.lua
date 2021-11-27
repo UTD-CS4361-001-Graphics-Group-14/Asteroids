@@ -8,6 +8,7 @@ local Score = require 'entities/score'
 local Lives = require 'entities/life_counter'
 local Ship = require 'entities/ship'
 local resources = require 'assets/resources'
+local scale = require 'lib/scale'
 
 state.name = 'game'
 
@@ -76,8 +77,8 @@ function spawnRandomBullet()
 	local angle = love.math.random() * 2 * math.pi
 
 	local pos = Vector2:new(
-		love.graphics.getWidth() / 2,
-		love.graphics.getHeight() / 2
+		scale.ow / 2,
+		scale.oh / 2
 	)
 
 	local bullet = Bullet:new(pos, angle)
@@ -86,7 +87,6 @@ function spawnRandomBullet()
 end
 
 function state:init(data)
-	self.textFont = resources.fonts.default
 	self.background = resources.background.bg
 	self.asteroids = {
 		spawnRandomAsteroid()
@@ -94,7 +94,7 @@ function state:init(data)
 	self.bullets = {}
 	self.lives = Lives:new()
 	self.score = Score:new()
-	self.ship = Ship:new(Vector2:new(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2))
+	self.ship = Ship:new(Vector2:new(scale.ow / 2, scale.oh / 2))
 	self.debug = false
 	self.nextAsteroidDelay = love.math.random(MIN_NEXT_ASTEROID_DELAY, MAX_NEXT_ASTEROID_DELAY)
 end
@@ -132,7 +132,7 @@ function state:update(dt)
 			self.newStateData = { score = self.score:get() }
 		end
 
-		self.ship = Ship:new(Vector2:new(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2))
+		self.ship = Ship:new(Vector2:new(scale.ow / 2, scale.oh / 2))
 		self.asteroids = {spawnRandomAsteroid()}
 		self.bullets = {}
 
@@ -185,8 +185,10 @@ function state:update(dt)
 end
 
 function state:draw(width, height)
-	love.graphics.setFont(self.textFont)
-	love.graphics.draw(self.background)
+	love.graphics.setColor(1, 1, 1, 1)
+
+	love.graphics.setFont(resources.fonts.default)
+	love.graphics.draw(self.background, scale:X(0), scale:Y(0), 0, scale:n(1), scale:n(1))
 
 	self.ship:draw()
 

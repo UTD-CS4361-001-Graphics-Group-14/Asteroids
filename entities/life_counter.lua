@@ -1,5 +1,7 @@
 local DEFAULT_LIVES = 3
 
+local scale = require 'lib/scale'
+
 local Lives = {}
 
 function Lives:new(x, y, initialLives)
@@ -32,7 +34,7 @@ function Lives:set(lives)
 end
 
 function Lives:draw(width, height)
-    love.graphics.printf("Lives: ".. self.lives, width - 350, 10, 300, "right")
+    love.graphics.printf("Lives: ".. self.lives, scale:X(width - 350), scale:Y(10), scale:n(325), "right")
 end
 
 return Lives

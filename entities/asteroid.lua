@@ -1,6 +1,7 @@
 local Vector2 = require 'lib/vector2'
 local Circle = require 'lib/circle'
 local utils = require 'lib/utils'
+local scale = require 'lib/scale'
 
 local Asteroid = {}
 
@@ -32,7 +33,7 @@ end
 
 function Asteroid:draw()
 	love.graphics.setColor(255, 255, 255)
-	love.graphics.circle('fill', self.pos.x, self.pos.y, self:_radius())
+	love.graphics.circle('fill', scale:X(self.pos.x), scale:Y(self.pos.y), scale:n(self:_radius()))
 end
 
 function Asteroid:update(dt)
@@ -40,7 +41,7 @@ function Asteroid:update(dt)
 	utils.wrapVector(
 		self.pos,
 		-self:_radius(), -self:_radius(),
-		love.graphics.getWidth() + self:_radius(), love.graphics.getHeight() + self:_radius()
+		scale.ow + self:_radius(), scale.oh + self:_radius()
 	)
 end
 

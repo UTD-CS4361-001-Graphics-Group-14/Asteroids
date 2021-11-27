@@ -1,5 +1,7 @@
 local Circle = {}
 
+local scale = require 'lib/scale'
+
 function Circle:new(pos, radius)
 	local circle = {
 		pos = pos,
@@ -17,7 +19,7 @@ function Circle:overlaps(circle)
 end
 
 function Circle:draw()
-	love.graphics.circle('line', self.pos.x, self.pos.y, self.radius)
+	love.graphics.circle('line', scale:X(self.pos.x), scale:Y(self.pos.y), scale:n(self.radius))
 end
 
 return Circle

@@ -1,6 +1,7 @@
 local Vector2 = require 'lib/vector2'
 local Circle = require 'lib/circle'
 local utils = require 'lib/utils'
+local scale = require 'lib/scale'
 
 local Bullet = {}
 
@@ -33,7 +34,7 @@ function Bullet:update(dt)
 		utils.wrapVector(
 			self.pos,
 			-BULLET_RADIUS, -BULLET_RADIUS,
-			love.graphics.getWidth() + BULLET_RADIUS, love.graphics.getHeight() + BULLET_RADIUS
+			scale.ow + BULLET_RADIUS, scale.oh + BULLET_RADIUS
 		)
 	end
 end
@@ -50,7 +51,7 @@ function Bullet:draw()
 	if not self.alive then return end
 
 	love.graphics.setColor(255, 255, 255)
-	love.graphics.circle('fill', self.pos.x, self.pos.y, BULLET_RADIUS)
+	love.graphics.circle('fill', scale:X(self.pos.x), scale:Y(self.pos.y), scale:n(BULLET_RADIUS))
 end
 
 return Bullet

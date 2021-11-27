@@ -1,3 +1,6 @@
+local scale = require 'lib/scale'
+local resources = require 'assets/resources'
+
 -- Called once, at initialization time; set up game state and variables
 function love.load()
 	GAME_STATES = {
@@ -8,6 +11,8 @@ function love.load()
 	}
 
 	screenWidth, screenHeight = love.graphics.getDimensions()
+	scale:_init(screenWidth, screenHeight)
+	resources:_resize()
 
 	gameState = GAME_STATES['menu']
 	gameState:init()
@@ -18,8 +23,6 @@ local timeSinceLastFPSSample = 0
 
 -- Called every frame, just before draw. Do physics calculations, etc.
 function love.update(dt)
-	screenWidth, screenHeight = love.graphics.getDimensions()
-
 	gameState:update(dt)
 	if gameState.newState then
 		local newState = gameState.newState
@@ -55,4 +58,10 @@ end
 -- Called every frame. Draw things here.
 function love.draw()
 	gameState:draw(screenWidth, screenHeight)
+	scale:_padding()
+end
+
+function love.resize(width, height)
+	scale:_resize(width, height)
+	resources:_resize()
 end

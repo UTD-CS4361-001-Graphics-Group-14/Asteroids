@@ -1,13 +1,23 @@
 local resources = {}
 
-resources.fonts = {
-	default = love.graphics.newFont('assets/fonts/roboto.ttf', 48),
-	small = love.graphics.newFont('assets/fonts/roboto.ttf', 24),
-	title = love.graphics.newFont('assets/fonts/major-mono-display.ttf', 96),
+local scale = require 'lib/scale'
+
+local fonts = {
+	default = {file = 'assets/fonts/roboto.ttf', size = 48},
+	small = {file = 'assets/fonts/roboto.ttf', size = 24},
+	title = {file = 'assets/fonts/major-mono-display.ttf', size = 96},
 }
 
 resources.background = {
 	bg = love.graphics.newImage('assets/background/space.png')
 }
+
+resources.fonts = {}
+
+function resources:_resize()
+	for k, v in pairs(fonts) do
+		self.fonts[k] = love.graphics.newFont(v.file, scale:n(v.size))
+	end
+end
 
 return resources
