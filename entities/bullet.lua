@@ -5,8 +5,8 @@ local scale = require 'lib/scale'
 
 local Bullet = {}
 
-local BULLET_SPEED = 800
-local BULLET_LIFETIME = 0.5 -- seconds
+local BULLET_SPEED = 400
+local BULLET_LIFETIME = 1.5 -- seconds
 local BULLET_RADIUS = 5
 
 function Bullet:new(pos, ang)

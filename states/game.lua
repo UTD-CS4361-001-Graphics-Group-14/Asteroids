@@ -13,8 +13,8 @@ local scale = require 'lib/scale'
 state.name = 'game'
 
 local ASTEROID_TARGET_PADDING = 0.5
-local ASTEROID_MIN_SPEED = 50
-local ASTEROID_MAX_SPEED = 250
+local ASTEROID_MIN_SPEED = 20
+local ASTEROID_MAX_SPEED = 50
 
 local MIN_NEXT_ASTEROID_DELAY = 3
 local MAX_NEXT_ASTEROID_DELAY = 6

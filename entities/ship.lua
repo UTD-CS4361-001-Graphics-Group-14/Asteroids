@@ -7,9 +7,9 @@ local scale = require 'lib/scale'
 local Ship = {}
 
 local SHIP_MAX_SPEED = 400
-local SHIP_ROT_SPEED = 4 * math.pi / 3
-local SHIP_ACCELERATION = 400
-local SHIP_DECELERATION = 100
+local SHIP_ROT_SPEED = 7 * math.pi / 6
+local SHIP_ACCELERATION = 600
+local SHIP_DECELERATION = 200
 
 local SHIP_RADIUS = 20
 local WHITE_CIRCLE_MAX_RADIUS = SHIP_RADIUS * 0.6
