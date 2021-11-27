@@ -12,6 +12,10 @@ resources.background = {
 	bg = love.graphics.newImage('assets/background/space.png')
 }
 
+resources.audio = {
+	bgmusic = love.audio.newSource('/assets/audio/delay.mp3', 'stream')
+}
+
 resources.fonts = {}
 
 function resources:_resize()

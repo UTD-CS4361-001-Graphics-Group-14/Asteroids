@@ -39,7 +39,7 @@ end
 function state:keyreleased(key) end
 
 function state:update(dt)
-
+	love.audio.stop(bgmusic)
 end
 
 function state:draw(width, height)

@@ -11,6 +11,7 @@ local resources = require 'assets/resources'
 local scale = require 'lib/scale'
 
 state.name = 'game'
+bgmusic = resources.audio.bgmusic
 
 local ASTEROID_TARGET_PADDING = 0.5
 local ASTEROID_MIN_SPEED = 20
@@ -114,6 +115,7 @@ function state:keyreleased(key)
 end
 
 function state:update(dt)
+	love.audio.play(bgmusic)
 	if self.shotDelay > 0 then
 		self.shotDelay = self.shotDelay - dt
 	end
