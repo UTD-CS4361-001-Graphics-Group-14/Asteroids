@@ -50,7 +50,6 @@ end
 function Bullet:draw()
 	if not self.alive then return end
 
-	love.graphics.setColor(255, 255, 255)
 	love.graphics.circle('fill', scale:X(self.pos.x), scale:Y(self.pos.y), scale:n(BULLET_RADIUS))
 end
 

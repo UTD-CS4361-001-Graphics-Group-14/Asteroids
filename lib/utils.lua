@@ -38,8 +38,7 @@ function utils.pointsToBoundingBox(points)
 end
 
 function utils.doCirclesOverlap(circle1, circle2)
-	local distance = circle1.pos:distance(circle2.pos)
-	return distance < circle1.radius + circle2.radius
+	return circle1:overlaps(circle2)
 end
 
 function utils.isWithinCircle(point, circlePos, circleRadius)

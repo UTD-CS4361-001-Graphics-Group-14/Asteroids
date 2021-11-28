@@ -7,6 +7,7 @@ local utils = require 'lib/utils'
 local Score = require 'entities/score'
 local Lives = require 'entities/life_counter'
 local Ship = require 'entities/ship'
+local UFO = require 'entities/ufo'
 local resources = require 'assets/resources'
 local scale = require 'lib/scale'
 
@@ -18,6 +19,9 @@ local ASTEROID_MAX_SPEED = 50
 
 local MIN_NEXT_ASTEROID_DELAY = 3
 local MAX_NEXT_ASTEROID_DELAY = 6
+
+local MIN_UFO_SPAWN_TIME = 5
+local MAX_UFO_SPAWN_TIME = 10
 
 local HYPERSPACE_TARGET_PADDING = 0.05
 
@@ -99,6 +103,11 @@ function state:init(data)
 	self.nextAsteroidDelay = love.math.random(MIN_NEXT_ASTEROID_DELAY, MAX_NEXT_ASTEROID_DELAY)
 	self.shotDelay = 0
 
+	self.ufo = UFO:new()
+	self.ufo.alive = false
+	self.ufoSpawnDelay = love.math.random(MIN_UFO_SPAWN_TIME, MAX_UFO_SPAWN_TIME)
+	self.ufoBullets = {}
+
 	self.bgMusic = resources.audio.bgmusic
 	self.bgMusic:setVolume(0.3)
 	self.bgMusic:setLooping(true)
@@ -145,6 +154,8 @@ function state:keypressed(key)
 		)
 
 		self.ship:hyperspaceJump(newPos)
+	elseif key == 'u' then
+		self.ufoSpawnDelay = 0
 	end
 end
 
@@ -155,6 +166,10 @@ end
 function state:update(dt)
 	if self.shotDelay > 0 then
 		self.shotDelay = self.shotDelay - dt
+	end
+
+	if not self.ufo.alive and self.ufoSpawnDelay > 0 then
+		self.ufoSpawnDelay = self.ufoSpawnDelay - dt
 	end
 
 	self.ship:update(dt)
@@ -172,8 +187,53 @@ function state:update(dt)
 		self.ship = Ship:new(Vector2:new(scale.ow / 2, scale.oh / 2))
 		self.asteroids = {spawnRandomAsteroid()}
 		self.bullets = {}
+		self.ufoBullets = {}
+		self.ufo.alive = false
 
 		return
+	end
+
+	for _, bullet in pairs(self.bullets) do
+		bullet:update(dt)
+
+		if self.ufo:shouldUpdate() then
+			for _, cBullet in pairs(bullet:getColliders()) do
+				for _, cUFO in pairs(self.ufo:getColliders()) do
+					if utils.doCirclesOverlap(cBullet, cUFO) then
+						self.ufo:kill()
+						bullet:kill()
+						self.ufoBullets = {}
+						break
+					end
+				end
+			end
+		end
+	end
+
+	for _, bullet in pairs(self.ufoBullets) do
+		bullet:update(dt)
+
+		for _, cBullet in pairs(bullet:getColliders()) do
+			for _, playerBullet in pairs(self.bullets) do
+				for _, cPlayerBullet in pairs(playerBullet:getColliders()) do
+					if utils.doCirclesOverlap(cBullet, cPlayerBullet) then
+						love.audio.play(self.impact)
+						bullet:kill()
+						playerBullet:kill()
+						break
+					end
+				end
+			end
+
+			for _, cShip in pairs(self.ship:getColliders()) do
+				if utils.doCirclesOverlap(cBullet, cShip) then
+					love.audio.play(self.explosion)
+					bullet:kill()
+					self.ship:kill()
+					break
+				end
+			end
+		end
 	end
 
 	for _, asteroid in pairs(self.asteroids) do
@@ -204,20 +264,32 @@ function state:update(dt)
 		end
 	end
 
-	local deadBullets = {}
+	self.ufo:update(dt)
 
-	for i, bullet in pairs(self.bullets) do
-		bullet:update(dt)
+	local ufoBullet = self.ufo:maybeFire(self.ship.pos)
+	if ufoBullet then
+		self.ufoBullets[#self.ufoBullets + 1] = ufoBullet
 	end
 
 	utils.filterTable(self.asteroids, function(asteroid) return asteroid.alive end)
 	utils.filterTable(self.bullets, function(bullet) return bullet.alive end)
+	utils.filterTable(self.ufoBullets, function(bullet) return bullet.alive end)
 
 	self.nextAsteroidDelay = self.nextAsteroidDelay - dt
 
 	if self.nextAsteroidDelay <= 0 then
 		self.asteroids[#self.asteroids + 1] = spawnRandomAsteroid()
 		self.nextAsteroidDelay = love.math.random(MIN_NEXT_ASTEROID_DELAY, MAX_NEXT_ASTEROID_DELAY)
+	end
+
+	if self.ufo.pos.x > scale.ow + self.ufo:_radius() then
+		self.ufo:kill()
+	end
+
+	if not self.ufo.alive and self.ufoSpawnDelay <= 0 then
+		self.ufo:spawn(Vector2:new(-self.ufo:_radius(), scale.ow/2), Vector2:new(1, 0))
+		self.ufoSpawnDelay = love.math.random(MIN_UFO_SPAWN_TIME, MAX_UFO_SPAWN_TIME)
+		print('[UFO] Spawned. Next spawn in ' .. self.ufoSpawnDelay .. 's')
 	end
 
 	utils.extendTable(self.asteroids, newAsteroids)
@@ -249,7 +321,29 @@ function state:draw(width, height)
 		end
 	end
 
+	self.ufo:draw()
+
+	if self.debug then
+		love.graphics.setColor(0, 1, 0)
+		for _, collider in pairs(self.ufo:getColliders()) do
+			collider:draw()
+		end
+	end
+
 	for _, bullet in pairs(self.bullets) do
+		love.graphics.setColor(1, 0.5, 0)
+		bullet:draw(width, height)
+
+		if self.debug then
+			love.graphics.setColor(0, 255, 0)
+			for _, collider in pairs(bullet:getColliders()) do
+				collider:draw()
+			end
+		end
+	end
+
+	for _, bullet in pairs(self.ufoBullets) do
+		love.graphics.setColor(0, 1, 0.5)
 		bullet:draw(width, height)
 
 		if self.debug then
