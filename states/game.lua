@@ -203,6 +203,7 @@ function state:update(dt)
 						self.ufo:kill()
 						bullet:kill()
 						self.ufoBullets = {}
+						self.score:increment(100)
 						break
 					end
 				end
