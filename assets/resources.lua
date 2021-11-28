@@ -14,6 +14,7 @@ resources.background = {
 
 resources.audio = {
 	bgmusic = love.audio.newSource('/assets/audio/delay.mp3', 'stream'),
+	explosion = love.audio.newSource('/assets/audio/explosion5.mp3', 'stream')
 }
 
 resources.fonts = {}
