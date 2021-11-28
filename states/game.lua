@@ -121,6 +121,13 @@ function state:init(data)
 
 	self.impact = resources.audio.impact
 	self.impact:setVolume(0.4)
+
+	self.hyperspaceJump = resources.audio.hyperspace
+	self.hyperspaceJump:setVolume(0.8)
+
+	self.ufoSfx = resources.audio.ufo
+	self.ufoSfx:setVolume(0.6)
+	self.ufoSfx:setLooping(true)
 end
 
 function state:keypressed(key)
@@ -152,6 +159,9 @@ function state:keypressed(key)
 			love.math.random(minTargetX, maxTargetX),
 			love.math.random(minTargetY, maxTargetY)
 		)
+
+		love.audio.stop(self.hyperspaceJump)
+		love.audio.play(self.hyperspaceJump)
 
 		self.ship:hyperspaceJump(newPos)
 	elseif key == 'u' then
@@ -187,8 +197,10 @@ function state:update(dt)
 		self.ship = Ship:new(Vector2:new(scale.ow / 2, scale.oh / 2))
 		self.asteroids = {spawnRandomAsteroid()}
 		self.bullets = {}
+
 		self.ufoBullets = {}
 		self.ufo.alive = false
+		love.audio.stop(self.ufoSfx)
 
 		return
 	end
@@ -200,10 +212,17 @@ function state:update(dt)
 			for _, cBullet in pairs(bullet:getColliders()) do
 				for _, cUFO in pairs(self.ufo:getColliders()) do
 					if utils.doCirclesOverlap(cBullet, cUFO) then
+						love.audio.stop(self.impact)
+						love.audio.play(self.impact)
+
+						love.audio.stop(self.ufoSfx)
+
 						self.ufo:kill()
 						bullet:kill()
 						self.ufoBullets = {}
+
 						self.score:increment(100)
+
 						break
 					end
 				end
@@ -218,9 +237,12 @@ function state:update(dt)
 			for _, playerBullet in pairs(self.bullets) do
 				for _, cPlayerBullet in pairs(playerBullet:getColliders()) do
 					if utils.doCirclesOverlap(cBullet, cPlayerBullet) then
+						love.audio.stop(self.impact)
 						love.audio.play(self.impact)
+
 						bullet:kill()
 						playerBullet:kill()
+
 						break
 					end
 				end
@@ -229,8 +251,10 @@ function state:update(dt)
 			for _, cShip in pairs(self.ship:getColliders()) do
 				if utils.doCirclesOverlap(cBullet, cShip) then
 					love.audio.play(self.explosion)
+
 					bullet:kill()
 					self.ship:kill()
+
 					break
 				end
 			end
@@ -245,9 +269,12 @@ function state:update(dt)
 				for _, cBullet in pairs(bullet:getColliders()) do
 					if utils.doCirclesOverlap(cAsteroid, cBullet) then
 						utils.extendTable(newAsteroids, asteroid:kill())
+
 						bullet:kill()
+
 						love.audio.stop(self.impact)
 						love.audio.play(self.impact)
+
 						self.score:increment()
 
 						break
@@ -258,7 +285,9 @@ function state:update(dt)
 			for _, cShip in pairs(self.ship:getColliders()) do
 				if utils.doCirclesOverlap(cAsteroid, cShip) then
 					love.audio.play(self.explosion)
+
 					self.ship:kill()
+
 					break
 				end
 			end
@@ -269,6 +298,8 @@ function state:update(dt)
 
 	local ufoBullet = self.ufo:maybeFire(self.ship.pos)
 	if ufoBullet then
+		love.audio.stop(self.fire)
+		love.audio.play(self.fire)
 		self.ufoBullets[#self.ufoBullets + 1] = ufoBullet
 	end
 
@@ -285,12 +316,14 @@ function state:update(dt)
 
 	if self.ufo.pos.x > scale.ow + self.ufo:_radius() then
 		self.ufo:kill()
+		love.audio.stop(self.ufoSfx)
 	end
 
 	if not self.ufo.alive and self.ufoSpawnDelay <= 0 then
 		self.ufo:spawn(Vector2:new(-self.ufo:_radius(), scale.ow/2), Vector2:new(1, 0))
 		self.ufoSpawnDelay = love.math.random(MIN_UFO_SPAWN_TIME, MAX_UFO_SPAWN_TIME)
 		print('[UFO] Spawned. Next spawn in ' .. self.ufoSpawnDelay .. 's')
+		love.audio.play(self.ufoSfx)
 	end
 
 	utils.extendTable(self.asteroids, newAsteroids)
