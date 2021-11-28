@@ -18,6 +18,7 @@ local ORANGE_CIRCLE_MAX_RADIUS = SHIP_RADIUS
 local RED_CIRCLE_MAX_RADIUS = SHIP_RADIUS * 1.2
 
 local EXPLOSION_TIME = 0.5
+local HYPERSPACE_TIME = 0.5
 
 local TRIANGLE_POINTS = {
 	Vector2:newFromMagnitudeAndAngle(SHIP_RADIUS, 0),
@@ -40,6 +41,7 @@ function Ship:new(pos, ang, vel)
 		vel = vel or Vector2:new(0, 0),
 		dying = 0,
 		alive = true,
+		hyperspaceTime = 0,
 	}
 
 	setmetatable(ship, self)
@@ -50,6 +52,17 @@ end
 
 function Ship:update(dt)
 	if not self.alive then return end
+
+	if self.hyperspaceTime > 0 then
+		self.hyperspaceTime = self.hyperspaceTime - dt
+
+		if self.hyperspaceTime <= HYPERSPACE_TIME / 2 and self.pos ~= self.hyperspacePos then
+			self.pos = self.hyperspacePos
+			self.vel:multiply(0)
+		end
+
+		return
+	end
 
 	if self.dying > 0 then
 		self.ang = self.ang + dt * SHIP_ROT_SPEED * 5
@@ -91,7 +104,7 @@ function Ship:update(dt)
 end
 
 function Ship:shouldUpdate()
-	return self.alive and self.dying <= 0
+	return self.alive and self.dying <= 0 and self.hyperspaceTime <= 0
 end
 
 function Ship:getNosePos()
@@ -104,6 +117,8 @@ function Ship:fire()
 end
 
 function Ship:getColliders()
+	if self.hyperspaceTime > 0 then return {} end
+
 	local colliders = {}
 
 	for i, circle in ipairs(COLLIDER_CIRCLES) do
@@ -121,9 +136,15 @@ end
 function Ship:draw()
 	if not self.alive then return end
 
+	local shipScale = 1
+
+	if self.hyperspaceTime > 0 then
+		shipScale = math.abs(self.hyperspaceTime - HYPERSPACE_TIME / 2) / (HYPERSPACE_TIME / 2)
+	end
+
 	local poly = {}
 	for i = 1, #TRIANGLE_POINTS do
-		local translated = TRIANGLE_POINTS[i]:rotated(self.ang):add(self.pos)
+		local translated = TRIANGLE_POINTS[i]:product(shipScale):rotate(self.ang):add(self.pos)
 		poly[#poly + 1] = scale:X(translated.x)
 		poly[#poly + 1] = scale:Y(translated.y)
 	end
@@ -146,6 +167,12 @@ function Ship:drawExplosion()
 	love.graphics.circle('fill', scale:X(self.pos.x), scale:Y(self.pos.y), scale:n(r * (YELLOW_CIRCLE_MAX_RADIUS + math.random() * YELLOW_CIRCLE_MAX_RADIUS / 4)))
 	love.graphics.setColor(255, 255, 255)
 	love.graphics.circle('fill', scale:X(self.pos.x), scale:Y(self.pos.y), scale:n(r * (WHITE_CIRCLE_MAX_RADIUS + math.random() * WHITE_CIRCLE_MAX_RADIUS / 4)))
+end
+
+function Ship:hyperspaceJump(newPos)
+	if not self:shouldUpdate() then return end
+	self.hyperspaceTime = HYPERSPACE_TIME
+	self.hyperspacePos = newPos
 end
 
 return Ship

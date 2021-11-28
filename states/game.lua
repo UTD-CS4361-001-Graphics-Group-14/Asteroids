@@ -19,6 +19,8 @@ local ASTEROID_MAX_SPEED = 50
 local MIN_NEXT_ASTEROID_DELAY = 3
 local MAX_NEXT_ASTEROID_DELAY = 6
 
+local HYPERSPACE_TARGET_PADDING = 0.05
+
 local SHOT_DELAY = 0.175
 
 local function spawnRandomAsteroid()
@@ -131,6 +133,18 @@ function state:keypressed(key)
 		local randomAsteroid = self.asteroids[love.math.random(1, #self.asteroids)]
 		local newAsteroids = randomAsteroid:kill()
 		utils.extendTable(self.asteroids, newAsteroids)
+	elseif key == 'lctrl' or key == 'rctrl' then
+		local minTargetX = scale.ow * HYPERSPACE_TARGET_PADDING / 2
+		local maxTargetX = scale.ow - minTargetX
+		local minTargetY = scale.oh * HYPERSPACE_TARGET_PADDING / 2
+		local maxTargetY = scale.oh - minTargetY
+
+		local newPos = Vector2:new(
+			love.math.random(minTargetX, maxTargetX),
+			love.math.random(minTargetY, maxTargetY)
+		)
+
+		self.ship:hyperspaceJump(newPos)
 	end
 end
 
