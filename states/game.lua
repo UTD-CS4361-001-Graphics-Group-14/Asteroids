@@ -126,7 +126,7 @@ function state:init(data)
 	self.hyperspaceJump:setVolume(0.8)
 
 	self.ufoSfx = resources.audio.ufo
-	self.ufoSfx:setVolume(0.6)
+	self.ufoSfx:setVolume(0.3)
 	self.ufoSfx:setLooping(true)
 end
 
