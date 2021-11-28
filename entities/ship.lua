@@ -123,7 +123,7 @@ function Ship:draw()
 
 	local poly = {}
 	for i = 1, #TRIANGLE_POINTS do
-		local translated = self.pos:sum(TRIANGLE_POINTS[i]:rotated(self.ang))
+		local translated = TRIANGLE_POINTS[i]:rotated(self.ang):add(self.pos)
 		poly[#poly + 1] = scale:X(translated.x)
 		poly[#poly + 1] = scale:Y(translated.y)
 	end
