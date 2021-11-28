@@ -15,7 +15,10 @@ resources.background = {
 resources.audio = {
 	bgmusic = love.audio.newSource('/assets/audio/delay.mp3', 'stream'),
 	explosion = love.audio.newSource('/assets/audio/explosion5.mp3', 'stream'),
-	firing = love.audio.newSource('/assets/audio/sflaser15.mp3','stream')
+	firing = love.audio.newSource('/assets/audio/sflaser15.mp3','stream'),
+	-- impact = love.audio.newSource('/assets/audio/crushimpact.wav', 'stream')
+	impact = love.audio.newSource('/assets/audio/shortexplosion.wav', 'stream')
+
 }
 
 resources.fonts = {}

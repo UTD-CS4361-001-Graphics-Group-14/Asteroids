@@ -89,15 +89,18 @@ function state:init(data)
 	self.shotDelay = 0
 
 	self.bgMusic = resources.audio.bgmusic
-	self.bgMusic:setVolume(0.5)
+	self.bgMusic:setVolume(0.3)
 	self.bgMusic:setLooping(true)
 	love.audio.play(self.bgMusic)
 
 	self.explosion = resources.audio.explosion
-	self.explosion:setVolume(0.5)
+	self.explosion:setVolume(0.8)
 
 	self.fire = resources.audio.firing
-	self.fire:setVolume(0.5)
+	self.fire:setVolume(0.8)
+
+	self.impact = resources.audio.impact
+	self.impact:setVolume(0.8)
 end
 
 function state:keypressed(key)
@@ -159,7 +162,8 @@ function state:update(dt)
 					if utils.doCirclesOverlap(cAsteroid, cBullet) then
 						utils.extendTable(newAsteroids, asteroid:kill())
 						bullet:kill()
-
+						love.audio.stop(self.impact)
+						love.audio.play(self.impact)
 						self.score:increment()
 
 						break
