@@ -94,13 +94,13 @@ function state:init(data)
 	love.audio.play(self.bgMusic)
 
 	self.explosion = resources.audio.explosion
-	self.explosion:setVolume(0.8)
+	self.explosion:setVolume(0.9)
 
 	self.fire = resources.audio.firing
 	self.fire:setVolume(0.8)
 
 	self.impact = resources.audio.impact
-	self.impact:setVolume(0.8)
+	self.impact:setVolume(0.4)
 end
 
 function state:keypressed(key)
