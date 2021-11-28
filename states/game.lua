@@ -30,24 +30,31 @@ local function spawnRandomAsteroid()
 	-- top edge
 	local spawnX = spawnPositionLinear
 	local spawnY = 0
+	local offsetVec = Vector2:new(0, 1)
 
 	if spawnPositionLinear >= windowWidth then
 		-- right edge
 		spawnPositionLinear = spawnPositionLinear - windowWidth
 		spawnX = windowWidth
 		spawnY = spawnPositionLinear
+		offsetVec.x = -1
+		offsetVec.y = 0
 
 		if spawnPositionLinear >= windowHeight then
 			-- bottom edge
 			spawnPositionLinear = spawnPositionLinear - windowHeight
 			spawnX = spawnPositionLinear
 			spawnY = windowHeight
+			offsetVec.x = 0
+			offsetVec.y = -1
 
 			if spawnPositionLinear >= windowWidth then
 				-- left edge
 				spawnPositionLinear = spawnPositionLinear - windowWidth
 				spawnX = 0
 				spawnY = spawnPositionLinear
+				offsetVec.x = 1
+				offsetVec.y = 0
 			end
 		end
 	end
@@ -72,7 +79,9 @@ local function spawnRandomAsteroid()
 	                                       )
 	                                   )
 
-	return Asteroid:new(spawnPosition, spawnVelocity)
+	local asteroid = Asteroid:new(spawnPosition, spawnVelocity)
+	asteroid.pos:sub(offsetVec:scaled(asteroid:_radius()))
+	return asteroid
 end
 
 function state:init(data)
