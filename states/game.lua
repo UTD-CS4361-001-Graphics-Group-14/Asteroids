@@ -104,9 +104,9 @@ function state:keypressed(key)
 	if key == 's' then
 		self.asteroids[#self.asteroids + 1] = spawnRandomAsteroid()
 	elseif key == 'space' then
-		love.audio.stop(self.fire)
-		love.audio.play(self.fire)
 		if self.shotDelay <= 0 then
+			love.audio.stop(self.fire)
+			love.audio.play(self.fire)
 			self.bullets[#self.bullets + 1] = self.ship:fire()
 			self.shotDelay = SHOT_DELAY
 		end
