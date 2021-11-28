@@ -95,12 +95,17 @@ function state:init(data)
 
 	self.explosion = resources.audio.explosion
 	self.explosion:setVolume(0.5)
+
+	self.fire = resources.audio.firing
+	self.fire:setVolume(0.5)
 end
 
 function state:keypressed(key)
 	if key == 's' then
 		self.asteroids[#self.asteroids + 1] = spawnRandomAsteroid()
 	elseif key == 'space' then
+		love.audio.stop(self.fire)
+		love.audio.play(self.fire)
 		if self.shotDelay <= 0 then
 			self.bullets[#self.bullets + 1] = self.ship:fire()
 			self.shotDelay = SHOT_DELAY
