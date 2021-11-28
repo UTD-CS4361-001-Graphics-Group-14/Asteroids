@@ -150,6 +150,8 @@ function state:keypressed(key)
 		local newAsteroids = randomAsteroid:kill()
 		utils.extendTable(self.asteroids, newAsteroids)
 	elseif key == 'lctrl' or key == 'rctrl' then
+		if self.ship.hyperspaceTime > 0 then return end
+
 		local minTargetX = scale.ow * HYPERSPACE_TARGET_PADDING / 2
 		local maxTargetX = scale.ow - minTargetX
 		local minTargetY = scale.oh * HYPERSPACE_TARGET_PADDING / 2
