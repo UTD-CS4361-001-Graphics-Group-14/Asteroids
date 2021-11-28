@@ -55,7 +55,7 @@ function Asteroid:kill()
 
 	if self.size > 1 then
 		local newSize = self.size / 2
-		local newVel = self.vel:multiply(1.25)
+		local newVel = self.vel:multiply(2.5)
 
 		newAsteroids[1] = Asteroid:new(self.pos:clone(), newVel:rotated(math.pi / 2), newSize)
 		newAsteroids[2] = Asteroid:new(self.pos:clone(), newVel:rotated(-math.pi / 2), newSize)
