@@ -135,20 +135,25 @@ function state:keypressed(key)
 
 	if key == 'c' then
 		self.debug = not self.debug
+		print('[DEBUG] Debugging mode active = ' .. tostring(self.debug))
 	end
 
 	if self.debug then
 		if key == 's' then
 			self.asteroids[#self.asteroids + 1] = spawnRandomAsteroid()
+			print('[DEBUG] Spawned asteroid at ' .. tostring(self.asteroids[#self.asteroids].pos))
 		elseif key == 'd' then
 			self.ship:kill()
+			print('[DEBUG] Killed ship')
 		elseif key == 'e' then
 			if #self.asteroids == 0 then return end
 			local randomAsteroid = self.asteroids[love.math.random(1, #self.asteroids)]
 			local newAsteroids = randomAsteroid:kill()
 			utils.extendTable(self.asteroids, newAsteroids)
+			print('[DEBUG] Killed asteroid at ' .. tostring(randomAsteroid.pos))
 		elseif key == 'u' then
 			self.ufoSpawnDelay = 0
+			print('[DEBUG] Spawned UFO')
 		end
 	end
 
