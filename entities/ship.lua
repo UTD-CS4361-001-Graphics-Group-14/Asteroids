@@ -17,6 +17,10 @@ local YELLOW_CIRCLE_MAX_RADIUS = SHIP_RADIUS * 0.8
 local ORANGE_CIRCLE_MAX_RADIUS = SHIP_RADIUS
 local RED_CIRCLE_MAX_RADIUS = SHIP_RADIUS * 1.2
 
+local ENGINE_EXHAUST_LENGTH = SHIP_RADIUS
+local ENGINE_EXHAUST_LENGTH_MIN_RANDOM_OFFSET = -(ENGINE_EXHAUST_LENGTH * 0.1)
+local ENGINE_EXHAUST_LENGTH_MAX_RANDOM_OFFSET = ENGINE_EXHAUST_LENGTH * 0.1
+
 local EXPLOSION_TIME = 0.5
 local HYPERSPACE_TIME = 0.5
 
@@ -42,6 +46,7 @@ function Ship:new(pos, ang, vel)
 		dying = 0,
 		alive = true,
 		hyperspaceTime = 0,
+		burningForward = false,
 	}
 
 	setmetatable(ship, self)
@@ -51,6 +56,8 @@ function Ship:new(pos, ang, vel)
 end
 
 function Ship:update(dt)
+	self.burningForward = false
+
 	if not self.alive then return end
 
 	if self.hyperspaceTime > 0 then
@@ -89,6 +96,7 @@ function Ship:update(dt)
 		self.ang = self.ang + SHIP_ROT_SPEED * dt
 	end
 	if love.keyboard.isDown('up') then
+		self.burningForward = true
 		if self.vel:magnitude() <= SHIP_MAX_SPEED then
 			accel:add(Vector2:newFromMagnitudeAndAngle(SHIP_ACCELERATION, self.ang))
 		end
@@ -135,6 +143,23 @@ end
 
 function Ship:draw()
 	if not self.alive then return end
+
+	if self.burningForward then
+		local burnLengthOffset = love.math.random(ENGINE_EXHAUST_LENGTH_MIN_RANDOM_OFFSET, ENGINE_EXHAUST_LENGTH_MAX_RANDOM_OFFSET)
+
+		love.graphics.setColor(0.5, 0.4, 1)
+		love.graphics.setLineWidth(scale:n(6))
+
+		local burnVec = Vector2:newFromMagnitudeAndAngle(
+			ENGINE_EXHAUST_LENGTH + burnLengthOffset,
+			self.ang - math.pi
+		):add(self.pos)
+
+		love.graphics.line(
+			scale:X(self.pos.x), scale:Y(self.pos.y),
+			scale:X(burnVec.x), scale:Y(burnVec.y)
+		)
+	end
 
 	local shipScale = 1
 

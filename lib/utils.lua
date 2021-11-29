@@ -6,6 +6,7 @@ local scale = require 'lib/scale'
 function utils.drawColliders(ent)
 	if not ent.getColliders then return end
 
+	love.graphics.setLineWidth(1)
 	love.graphics.setColor(0, 1, 0)
 	for _, c in pairs(ent:getColliders()) do
 		love.graphics.circle('line', scale:X(c.pos.x), scale:Y(c.pos.y), scale:n(c.radius))
