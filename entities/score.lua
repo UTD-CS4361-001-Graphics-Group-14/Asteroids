@@ -1,5 +1,6 @@
 local Score = {}
 
+local utils = require 'lib/utils'
 local scale = require 'lib/scale'
 
 function Score:new(x, y, initialScore)
@@ -30,7 +31,7 @@ function Score:set(val)
 end
 
 function Score:draw(width, height)
-	love.graphics.printf("Score: ".. self.score, scale:X(20), scale:Y(10), scale:n(300), "left")
+	love.graphics.printf("Score: ".. utils.formatNumber(self.score), scale:X(20), scale:Y(10), scale:n(300), "left")
 end
 
 return Score

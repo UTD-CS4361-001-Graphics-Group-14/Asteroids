@@ -49,7 +49,7 @@ function state:draw(width, height)
 	utils.centeredText('Game Over', 0.1 * height)
 
 	love.graphics.setFont(resources.fonts.default)
-	local scoreText = 'Score: ' .. self.score
+	local scoreText = 'Score: ' .. utils.formatNumber(self.score)
 	utils.centeredText(scoreText, 0.3 * height)
 
 	if self.cursorPos == 1 then

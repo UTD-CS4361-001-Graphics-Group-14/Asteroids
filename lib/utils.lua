@@ -3,6 +3,18 @@ local utils = {}
 local Vector2 = require 'lib/vector2'
 local scale = require 'lib/scale'
 
+-- adapted from https://stackoverflow.com/a/10992898
+function utils.formatNumber(number)
+	local i, j, minus, int, fraction = tostring(number):find('([-]?)(%d+)([.]?%d*)')
+
+	-- reverse the int-string and append a comma to all blocks of 3 digits
+	int = int:reverse():gsub("(%d%d%d)", "%1,")
+
+	-- reverse the int-string back remove an optional comma and put the
+	-- optional minus and fractional part back
+	return minus .. int:reverse():gsub("^,", "") .. fraction
+end
+
 function utils.drawColliders(ent)
 	if not ent.getColliders then return end
 
