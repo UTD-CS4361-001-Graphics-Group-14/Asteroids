@@ -3,6 +3,15 @@ local utils = {}
 local Vector2 = require 'lib/vector2'
 local scale = require 'lib/scale'
 
+function utils.drawColliders(ent)
+	if not ent.getColliders then return end
+
+	love.graphics.setColor(0, 1, 0)
+	for _, c in pairs(ent:getColliders()) do
+		love.graphics.circle('line', scale:X(c.pos.x), scale:Y(c.pos.y), scale:n(c.radius))
+	end
+end
+
 function utils.centeredText(str, y)
 	love.graphics.print(str, scale:X(scale.ow / 2) - love.graphics.getFont():getWidth(str) / 2, scale:Y(y))
 end

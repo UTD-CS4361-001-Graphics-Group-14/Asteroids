@@ -339,55 +339,20 @@ function state:draw(width, height)
 
 	self.ship:draw()
 
-	if self.debug then
-		love.graphics.setColor(0, 255, 0)
-		for _, collider in pairs(self.ship:getColliders()) do
-			collider:draw()
-		end
-	end
-
 	for _, asteroid in pairs(self.asteroids) do
 		asteroid:draw(width, height)
-
-		if self.debug then
-			love.graphics.setColor(0, 255, 0)
-			for _, collider in pairs(asteroid:getColliders()) do
-				collider:draw()
-			end
-		end
 	end
 
 	self.ufo:draw()
 
-	if self.debug then
-		love.graphics.setColor(0, 1, 0)
-		for _, collider in pairs(self.ufo:getColliders()) do
-			collider:draw()
-		end
-	end
-
 	for _, bullet in pairs(self.bullets) do
 		love.graphics.setColor(1, 0.5, 0)
 		bullet:draw(width, height)
-
-		if self.debug then
-			love.graphics.setColor(0, 255, 0)
-			for _, collider in pairs(bullet:getColliders()) do
-				collider:draw()
-			end
-		end
 	end
 
 	for _, bullet in pairs(self.ufoBullets) do
 		love.graphics.setColor(0, 1, 0.5)
 		bullet:draw(width, height)
-
-		if self.debug then
-			love.graphics.setColor(0, 255, 0)
-			for _, collider in pairs(bullet:getColliders()) do
-				collider:draw()
-			end
-		end
 	end
 
 	self.ship:drawExplosion()
@@ -395,6 +360,20 @@ function state:draw(width, height)
 	love.graphics.setColor(255, 255, 255)
 	self.lives:draw(width, height)
 	self.score:draw(width, height)
+
+	if self.debug then
+		utils.drawColliders(self.ship)
+		utils.drawColliders(self.ufo)
+		for _, asteroid in pairs(self.asteroids) do
+			utils.drawColliders(asteroid)
+		end
+		for _, bullet in pairs(self.bullets) do
+			utils.drawColliders(bullet)
+		end
+		for _, bullet in pairs(self.ufoBullets) do
+			utils.drawColliders(bullet)
+		end
+	end
 end
 
 return state
