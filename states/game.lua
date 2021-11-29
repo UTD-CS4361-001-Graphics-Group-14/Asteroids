@@ -163,7 +163,7 @@ function state:keypressed(key)
 			self.bullets[#self.bullets + 1] = self.ship:fire()
 			self.shotDelay = SHOT_DELAY
 		end
-	elseif key == 'lctrl' or key == 'rctrl' then
+	elseif key == 'lalt' or key == 'ralt' then
 		if self.ship.hyperspaceTime > 0 then return end
 
 		local minTargetX = scale.ow * HYPERSPACE_TARGET_PADDING / 2
