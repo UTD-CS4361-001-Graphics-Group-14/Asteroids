@@ -12,6 +12,20 @@ function utils.drawColliders(ent)
 	end
 end
 
+function utils.collidesWith(ent1, ent2)
+	if not ent1.getColliders or not ent2.getColliders then return false end
+
+	for _, c1 in pairs(ent1:getColliders()) do
+		for _, c2 in pairs(ent2:getColliders()) do
+			if c1:overlaps(c2) then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
 function utils.centeredText(str, y)
 	love.graphics.print(str, scale:X(scale.ow / 2) - love.graphics.getFont():getWidth(str) / 2, scale:Y(y))
 end

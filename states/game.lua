@@ -211,23 +211,19 @@ function state:update(dt)
 		bullet:update(dt)
 
 		if self.ufo:shouldUpdate() then
-			for _, cBullet in pairs(bullet:getColliders()) do
-				for _, cUFO in pairs(self.ufo:getColliders()) do
-					if utils.doCirclesOverlap(cBullet, cUFO) then
-						love.audio.stop(self.impact)
-						love.audio.play(self.impact)
+			if utils.collidesWith(bullet, self.ufo) then
+				love.audio.stop(self.impact)
+				love.audio.play(self.impact)
 
-						love.audio.stop(self.ufoSfx)
+				love.audio.stop(self.ufoSfx)
 
-						self.ufo:kill()
-						bullet:kill()
-						self.ufoBullets = {}
+				self.ufo:kill()
+				bullet:kill()
+				self.ufoBullets = {}
 
-						self.score:increment(100)
+				self.score:increment(100)
 
-						break
-					end
-				end
+				break
 			end
 		end
 	end
@@ -235,64 +231,52 @@ function state:update(dt)
 	for _, bullet in pairs(self.ufoBullets) do
 		bullet:update(dt)
 
-		for _, cBullet in pairs(bullet:getColliders()) do
-			for _, playerBullet in pairs(self.bullets) do
-				for _, cPlayerBullet in pairs(playerBullet:getColliders()) do
-					if utils.doCirclesOverlap(cBullet, cPlayerBullet) then
-						love.audio.stop(self.impact)
-						love.audio.play(self.impact)
+		for _, playerBullet in pairs(self.bullets) do
+			if utils.collidesWith(bullet, playerBullet) then
+				love.audio.stop(self.impact)
+				love.audio.play(self.impact)
 
-						bullet:kill()
-						playerBullet:kill()
+				bullet:kill()
+				playerBullet:kill()
 
-						break
-					end
-				end
+				break
 			end
+		end
 
-			for _, cShip in pairs(self.ship:getColliders()) do
-				if utils.doCirclesOverlap(cBullet, cShip) then
-					love.audio.play(self.explosion)
+		if utils.collidesWith(bullet, self.ship) then
+			love.audio.play(self.explosion)
 
-					bullet:kill()
-					self.ship:kill()
+			bullet:kill()
+			self.ship:kill()
 
-					break
-				end
-			end
+			break
 		end
 	end
 
 	for _, asteroid in pairs(self.asteroids) do
 		asteroid:update(dt)
 
-		for _, cAsteroid in pairs(asteroid:getColliders()) do
-			for _, bullet in pairs(self.bullets) do
-				for _, cBullet in pairs(bullet:getColliders()) do
-					if utils.doCirclesOverlap(cAsteroid, cBullet) then
-						utils.extendTable(newAsteroids, asteroid:kill())
+		for _, bullet in pairs(self.bullets) do
+			if utils.collidesWith(asteroid, bullet) then
+				utils.extendTable(newAsteroids, asteroid:kill())
 
-						bullet:kill()
+				bullet:kill()
 
-						love.audio.stop(self.impact)
-						love.audio.play(self.impact)
+				love.audio.stop(self.impact)
+				love.audio.play(self.impact)
 
-						self.score:increment()
+				self.score:increment()
 
-						break
-					end
-				end
+				break
 			end
+		end
 
-			for _, cShip in pairs(self.ship:getColliders()) do
-				if utils.doCirclesOverlap(cAsteroid, cShip) then
-					love.audio.play(self.explosion)
+		if utils.collidesWith(asteroid, self.ship) then
+			love.audio.play(self.explosion)
 
-					self.ship:kill()
+			self.ship:kill()
 
-					break
-				end
-			end
+			break
 		end
 	end
 
