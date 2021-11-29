@@ -27,6 +27,12 @@ local HYPERSPACE_TARGET_PADDING = 0.05
 
 local SHOT_DELAY = 0.175
 
+local ASTEROID_POINT_VALUES = {
+	100,
+	50,
+	20,
+}
+
 local function spawnRandomAsteroid()
 	local windowWidth, windowHeight = scale.ow, scale.oh
 
@@ -238,7 +244,7 @@ function state:update(dt)
 				bullet:kill()
 				self.ufoBullets = {}
 
-				self.score:increment(100)
+				self.score:increment(1000)
 
 				break
 			end
@@ -282,7 +288,7 @@ function state:update(dt)
 				love.audio.stop(self.impact)
 				love.audio.play(self.impact)
 
-				self.score:increment()
+				self.score:increment(ASTEROID_POINT_VALUES[asteroid.size])
 
 				break
 			end

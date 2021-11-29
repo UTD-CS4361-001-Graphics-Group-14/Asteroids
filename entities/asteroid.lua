@@ -11,7 +11,7 @@ function Asteroid:new(pos, vel, size)
 	local asteroid = {
 		pos = pos or Vector2:new(0, 0),
 		vel = vel or Vector2:new(0, 0),
-		size = size or 4,
+		size = size or 3,
 		alive = true,
 	}
 
@@ -28,7 +28,7 @@ function Asteroid:shouldUpdate()
 end
 
 function Asteroid:_radius()
-	return BASE_ASTEROID_SIZE * self.size
+	return BASE_ASTEROID_SIZE * (2 ^ (self.size - 1))
 end
 
 function Asteroid:draw()
@@ -54,7 +54,7 @@ function Asteroid:kill()
 	local newAsteroids = {}
 
 	if self.size > 1 then
-		local newSize = self.size / 2
+		local newSize = self.size - 1
 		local newVel = self.vel:multiply(2.5)
 
 		newAsteroids[1] = Asteroid:new(self.pos:clone(), newVel:rotated(math.pi / 2), newSize)
