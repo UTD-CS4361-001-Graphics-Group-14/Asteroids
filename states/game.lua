@@ -131,24 +131,38 @@ function state:init(data)
 end
 
 function state:keypressed(key)
-	if key == 's' then
-		self.asteroids[#self.asteroids + 1] = spawnRandomAsteroid()
-	elseif key == 'space' then
+	-- DEBUGGING KEYS
+
+	if key == 'c' then
+		self.debug = not self.debug
+	end
+
+	if self.debug then
+		if key == 's' then
+			self.asteroids[#self.asteroids + 1] = spawnRandomAsteroid()
+		elseif key == 'd' then
+			self.ship:kill()
+		elseif key == 'e' then
+			if #self.asteroids == 0 then return end
+			local randomAsteroid = self.asteroids[love.math.random(1, #self.asteroids)]
+			local newAsteroids = randomAsteroid:kill()
+			utils.extendTable(self.asteroids, newAsteroids)
+		elseif key == 'u' then
+			self.ufoSpawnDelay = 0
+		end
+	end
+
+	-- SHIP CONTROLS
+
+	if not self.ship:shouldUpdate() then return end
+
+	if key == 'space' then
 		if self.shotDelay <= 0 then
 			love.audio.stop(self.fire)
 			love.audio.play(self.fire)
 			self.bullets[#self.bullets + 1] = self.ship:fire()
 			self.shotDelay = SHOT_DELAY
 		end
-	elseif key == 'd' then
-		self.ship:kill()
-	elseif key == 'c' then
-		self.debug = not self.debug
-	elseif key == 'e' then
-		if #self.asteroids == 0 then return end
-		local randomAsteroid = self.asteroids[love.math.random(1, #self.asteroids)]
-		local newAsteroids = randomAsteroid:kill()
-		utils.extendTable(self.asteroids, newAsteroids)
 	elseif key == 'lctrl' or key == 'rctrl' then
 		if self.ship.hyperspaceTime > 0 then return end
 
@@ -166,8 +180,6 @@ function state:keypressed(key)
 		love.audio.play(self.hyperspaceJump)
 
 		self.ship:hyperspaceJump(newPos)
-	elseif key == 'u' then
-		self.ufoSpawnDelay = 0
 	end
 end
 
