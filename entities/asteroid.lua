@@ -44,7 +44,7 @@ function Asteroid:draw()
 	local poly = {}
 
 	for i = 1, #self.ASTEROID_POINTS do
-		local translated = self.ASTEROID_POINTS[i]:sum(self.pos)
+		local translated = self.ASTEROID_POINTS[i]:rotate(math.pi/6):sum(self.pos)
 		poly[#poly + 1] = scale:X(translated.x)
 		poly[#poly + 1] = scale:Y(translated.y)
 	end
