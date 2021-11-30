@@ -18,7 +18,7 @@ function Asteroid:new(pos, vel, size)
 
 	asteroid.collider = Circle:new(asteroid.pos, asteroid:_radius())
 
-	ASTEROID_POINTS = {
+	asteroid.ASTEROID_POINTS = {
 		Vector2:newFromMagnitudeAndAngle(asteroid:_radius(), 0),
 		Vector2:newFromMagnitudeAndAngle(asteroid:_radius() * 1.118, 1.107),
 		Vector2:newFromMagnitudeAndAngle(asteroid:_radius() * 1.03, math.pi/2 + 0.245),
@@ -43,19 +43,17 @@ function Asteroid:draw()
 
 	local poly = {}
 
-	for i = 1, #ASTEROID_POINTS do
-		local translated = ASTEROID_POINTS[i]:add(self.pos)
+	for i = 1, #self.ASTEROID_POINTS do
+		local translated = self.ASTEROID_POINTS[i]:sum(self.pos)
 		poly[#poly + 1] = scale:X(translated.x)
 		poly[#poly + 1] = scale:Y(translated.y)
 	end
 
-	love.graphics.setColor(255, 255, 255)
+	love.graphics.setColor(0.67, 0.67, 0.67)
 	local tris = love.math.triangulate(poly)
 	for _, tri in pairs(tris) do
-		love.graphics.polygon('line', tri)
+		love.graphics.polygon('fill', tri)
 	end
-
-	-- love.graphics.circle('fill', scale:X(self.pos.x), scale:Y(self.pos.y), scale:n(self:_radius()))
 end
 
 function Asteroid:update(dt)
