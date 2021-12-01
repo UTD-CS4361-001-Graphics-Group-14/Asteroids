@@ -99,8 +99,6 @@ function UFO:draw()
 	for _, tri in pairs(tris) do
 		love.graphics.polygon('fill', tri)
 	end
-
-	-- love.graphics.circle('fill', scale:X(self.pos.x), scale:Y(self.pos.y), scale:n(UFO_WIDTH/2))
 end
 
 function UFO:spawn(spawnPos, spawnDirection)
