@@ -225,6 +225,7 @@ function state:update(dt)
 
 		self.ufoBullets = {}
 		self.ufo.alive = false
+		self.ufoSpawnDelay = love.math.random(MIN_UFO_SPAWN_TIME, MAX_UFO_SPAWN_TIME)
 		love.audio.stop(self.ufoSfx)
 
 		return
