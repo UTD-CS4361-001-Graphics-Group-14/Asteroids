@@ -5,11 +5,30 @@ local Circle = require 'lib/circle'
 local Vector2 = require 'lib/vector2'
 local scale = require 'lib/scale'
 
-local UFO_SPEED = 200
-local UFO_WIDTH = 25
+local UFO_SPEED = 250
+local UFO_WIDTH = 30
 
 local MIN_SHOT_TIME = 1
 local MAX_SHOT_TIME = 3
+
+local UFO_CAP_POINTS = {
+	Vector2:new(0, -1),
+	Vector2:new(0.35, -1),
+	Vector2:new(0.65, -0.666),
+	Vector2:new(0.65, 0.1),
+	Vector2:new(-0.65, 0.1),
+	Vector2:new(-0.65, -0.666),
+	Vector2:new(-0.35, -1),
+}
+
+local UFO_BASE_POINTS = {
+	Vector2:new(0.65, 0.1),
+	Vector2:new(1.25, 0.45),
+	Vector2:new(0.65, 1),
+	Vector2:new(-0.65, 1),
+	Vector2:new(-1.25, 0.45),
+	Vector2:new(-0.65, 0.1),
+}
 
 function UFO:new(spawnPos, spawnDirection)
 	local ufo = {
@@ -53,8 +72,31 @@ end
 
 function UFO:draw()
 	if not self:shouldUpdate() then return end
+
 	love.graphics.setColor(0, 1, 0.1)
-	love.graphics.circle('fill', scale:X(self.pos.x), scale:Y(self.pos.y), scale:n(UFO_WIDTH/2))
+
+	love.graphics.setLineWidth(1)
+
+	local capPoly = {}
+	for i, point in ipairs(UFO_CAP_POINTS) do
+		local scaledPoint = point:product(self:_radius()):add(self.pos)
+		capPoly[#capPoly + 1] = scale:X(scaledPoint.x)
+		capPoly[#capPoly + 1] = scale:Y(scaledPoint.y)
+	end
+	love.graphics.polygon('line', capPoly)
+
+	local basePoly = {}
+	for i, point in ipairs(UFO_BASE_POINTS) do
+		local scaledPoint = point:product(self:_radius()):add(self.pos)
+		basePoly[#basePoly + 1] = scale:X(scaledPoint.x)
+		basePoly[#basePoly + 1] = scale:Y(scaledPoint.y)
+	end
+	local tris = love.math.triangulate(basePoly)
+	for _, tri in pairs(tris) do
+		love.graphics.polygon('fill', tri)
+	end
+
+	-- love.graphics.circle('fill', scale:X(self.pos.x), scale:Y(self.pos.y), scale:n(UFO_WIDTH/2))
 end
 
 function UFO:spawn(spawnPos, spawnDirection)
