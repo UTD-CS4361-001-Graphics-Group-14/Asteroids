@@ -24,6 +24,7 @@ function Asteroid:new(pos, vel, size)
 		alive = true,
 		ang = love.math.random(0, 2 * math.pi),
 	}
+
 	setmetatable(asteroid, self)
 	self.__index = self
 
