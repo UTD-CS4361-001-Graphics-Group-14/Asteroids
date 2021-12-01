@@ -50,7 +50,13 @@ end
 function Bullet:draw()
 	if not self.alive then return end
 
-	love.graphics.circle('fill', scale:X(self.pos.x), scale:Y(self.pos.y), scale:n(BULLET_RADIUS))
+	local startPos = Vector2:newFromMagnitudeAndAngle(-BULLET_RADIUS, self.vel:heading()):add(self.pos)
+	local endPos = Vector2:newFromMagnitudeAndAngle(BULLET_RADIUS, self.vel:heading()):add(self.pos)
+
+	love.graphics.setLineWidth(scale:n(3))
+	love.graphics.line(scale:X(startPos.x), scale:Y(startPos.y), scale:X(endPos.x), scale:Y(endPos.y))
+
+	-- love.graphics.circle('fill', scale:X(self.pos.x), scale:Y(self.pos.y), scale:n(BULLET_RADIUS))
 end
 
 return Bullet
