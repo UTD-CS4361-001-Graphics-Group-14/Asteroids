@@ -4,6 +4,7 @@ local utils = require 'lib/utils'
 local scale = require 'lib/scale'
 
 local Asteroid = {}
+
 local BASE_ASTEROID_SIZE = 15
 
 local ASTEROID_POINTS = {
@@ -23,6 +24,7 @@ function Asteroid:new(pos, vel, size)
 		size = size or 3,
 		alive = true,
 		ang = love.math.random(0, 2 * math.pi),
+		rotatesLeft = love.math.random() < 0.5,
 	}
 
 	setmetatable(asteroid, self)
@@ -58,7 +60,7 @@ function Asteroid:draw()
 end
 
 function Asteroid:update(dt)
-	self.ang = self.ang + (self.vel:magnitude() / 25) * dt
+	self.ang = self.ang + (self.vel:magnitude() / 25) * dt * (self.rotatesLeft and -1 or 1)
 	self.pos:add(self.vel:product(dt))
 	utils.wrapVector(
 		self.pos,
