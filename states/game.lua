@@ -134,6 +134,10 @@ function state:init(data)
 	self.ufoSfx = resources.audio.ufo
 	self.ufoSfx:setVolume(0.3)
 	self.ufoSfx:setLooping(true)
+
+	self.shipThrustSfx = resources.audio.thrust
+	self.shipThrustSfx:setVolume(0.4)
+	self.shipThrustSfx:setLooping(true)
 end
 
 function state:keypressed(key)
@@ -208,6 +212,12 @@ function state:update(dt)
 	end
 
 	self.ship:update(dt)
+
+	if self.ship.burningForward then
+		love.audio.play(self.shipThrustSfx)
+	else
+		love.audio.stop(self.shipThrustSfx)
+	end
 
 	local newAsteroids = {}
 

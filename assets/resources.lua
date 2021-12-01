@@ -14,11 +14,12 @@ resources.background = {
 
 resources.audio = {
 	bgmusic = love.audio.newSource('assets/audio/delay.mp3', 'stream'),
-	explosion = love.audio.newSource('assets/audio/explosion5.mp3', 'stream'),
-	firing = love.audio.newSource('assets/audio/sflaser15.mp3','stream'),
-	impact = love.audio.newSource('assets/audio/shortexplosion.wav', 'stream'),
-	hyperspace = love.audio.newSource('assets/audio/sfx_sounds_interaction12.wav', 'stream'),
-	ufo = love.audio.newSource('assets/audio/sfx_alarm_loop4.wav', 'stream'),
+	explosion = love.audio.newSource('assets/audio/explosion5.mp3', 'static'),
+	firing = love.audio.newSource('assets/audio/sflaser15.mp3','static'),
+	impact = love.audio.newSource('assets/audio/shortexplosion.wav', 'static'),
+	hyperspace = love.audio.newSource('assets/audio/sfx_sounds_interaction12.wav', 'static'),
+	ufo = love.audio.newSource('assets/audio/sfx_alarm_loop4.wav', 'static'),
+	thrust = love.audio.newSource('assets/audio/sfx_vehicle_plainloop.wav', 'static'),
 }
 
 resources.fonts = {}
