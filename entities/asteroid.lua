@@ -6,27 +6,28 @@ local scale = require 'lib/scale'
 local Asteroid = {}
 local BASE_ASTEROID_SIZE = 15
 
+local ASTEROID_POINTS = {
+	Vector2:newFromMagnitudeAndAngle(1, 0),
+	Vector2:newFromMagnitudeAndAngle(1.118, 1.107),
+	Vector2:newFromMagnitudeAndAngle(1.03, math.pi/2 + 0.245),
+	Vector2:newFromMagnitudeAndAngle(0.576, math.pi/2 + 0.862),
+	Vector2:newFromMagnitudeAndAngle(1, math.pi),
+	Vector2:newFromMagnitudeAndAngle(0.976, math.pi + 0.876),
+	Vector2:newFromMagnitudeAndAngle(1.068, 3 * math.pi/2 + 0.359),
+}
+
 function Asteroid:new(pos, vel, size)
 	local asteroid = {
 		pos = pos or Vector2:new(0, 0),
 		vel = vel or Vector2:new(0, 0),
 		size = size or 3,
 		alive = true,
+		ang = love.math.random(0, 2 * math.pi),
 	}
 	setmetatable(asteroid, self)
 	self.__index = self
 
 	asteroid.collider = Circle:new(asteroid.pos, asteroid:_radius())
-
-	asteroid.ASTEROID_POINTS = {
-		Vector2:newFromMagnitudeAndAngle(asteroid:_radius(), 0),
-		Vector2:newFromMagnitudeAndAngle(asteroid:_radius() * 1.118, 1.107),
-		Vector2:newFromMagnitudeAndAngle(asteroid:_radius() * 1.03, math.pi/2 + 0.245),
-		Vector2:newFromMagnitudeAndAngle(asteroid:_radius() * 0.576, math.pi/2 + 0.862),
-		Vector2:newFromMagnitudeAndAngle(asteroid:_radius(), math.pi),
-		Vector2:newFromMagnitudeAndAngle(asteroid:_radius() * 0.976, math.pi + 0.876),
-		Vector2:newFromMagnitudeAndAngle(asteroid:_radius() * 1.068, 3 * math.pi/2 + 0.359),
-	}
 
 	return asteroid
 end
@@ -40,11 +41,10 @@ function Asteroid:_radius()
 end
 
 function Asteroid:draw()
-
 	local poly = {}
 
-	for i = 1, #self.ASTEROID_POINTS do
-		local translated = self.ASTEROID_POINTS[i]:rotate(math.pi/6):sum(self.pos)
+	for i = 1, #ASTEROID_POINTS do
+		local translated = ASTEROID_POINTS[i]:rotated(self.ang):multiply(self:_radius()):add(self.pos)
 		poly[#poly + 1] = scale:X(translated.x)
 		poly[#poly + 1] = scale:Y(translated.y)
 	end
@@ -57,6 +57,7 @@ function Asteroid:draw()
 end
 
 function Asteroid:update(dt)
+	self.ang = self.ang + (self.vel:magnitude() / 25) * dt
 	self.pos:add(self.vel:product(dt))
 	utils.wrapVector(
 		self.pos,
