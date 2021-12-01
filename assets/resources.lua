@@ -16,7 +16,6 @@ resources.audio = {
 	bgmusic = love.audio.newSource('assets/audio/delay.mp3', 'stream'),
 	explosion = love.audio.newSource('assets/audio/explosion5.mp3', 'stream'),
 	firing = love.audio.newSource('assets/audio/sflaser15.mp3','stream'),
-	-- impact = love.audio.newSource('/assets/audio/crushimpact.wav', 'stream'),
 	impact = love.audio.newSource('assets/audio/shortexplosion.wav', 'stream'),
 	hyperspace = love.audio.newSource('assets/audio/sfx_sounds_interaction12.wav', 'stream'),
 	ufo = love.audio.newSource('assets/audio/sfx_alarm_loop4.wav', 'stream'),
