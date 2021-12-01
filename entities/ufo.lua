@@ -67,7 +67,11 @@ function UFO:maybeFire(playerPos)
 	if not self:shouldUpdate() then return end
 	if self.shotTimer > 0 then return end
 	self.shotTimer = self.shotTimer + love.math.random(MIN_SHOT_TIME, MAX_SHOT_TIME)
-	return Bullet:new(self.pos, (playerPos - self.pos):heading())
+
+	local targetAng = (playerPos - self.pos):heading()
+	local bulletPos = self.pos + Vector2:newFromMagnitudeAndAngle(self:_radius(), targetAng)
+
+	return Bullet:new(bulletPos, targetAng)
 end
 
 function UFO:draw()
